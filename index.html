@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🌟 DEVIL'S ASCENT - Edición Definitiva</title>
+    <title>⚡ DEVIL'S ASCENT - Edición Extrema</title>
     <style>
         * {
             margin: 0;
@@ -58,7 +58,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.92);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -67,153 +67,151 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             padding: 20px;
+            overflow-y: auto;
         }
         
-        #menuOverlay.hidden {
-            display: none;
-        }
+        #menuOverlay.hidden { display: none; }
         
         #menuTitle {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 40px rgba(233,69,96,0.6), 0 4px 20px rgba(0,0,0,0.8);
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-align: center;
             letter-spacing: 2px;
         }
         
         #menuSubtitle {
-            color: rgba(255,255,255,0.6);
-            font-size: 16px;
-            margin-bottom: 25px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            margin-bottom: 15px;
             text-align: center;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
         }
+        
+        .menu-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .menu-tab {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 8px 18px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            touch-action: manipulation;
+        }
+        
+        .menu-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .menu-tab.active { background: rgba(233,69,96,0.2); border-color: #e94560; color: #fff; }
+        
+        .menu-panel {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            max-height: 160px;
+            overflow-y: auto;
+        }
+        
+        .menu-panel.active { display: flex; }
+        
+        .menu-panel::-webkit-scrollbar { width: 4px; }
+        .menu-panel::-webkit-scrollbar-thumb { background: #e94560; border-radius: 10px; }
+        
+        .custom-item {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 5px 10px;
+            color: #fff;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            touch-action: manipulation;
+            text-align: center;
+            min-width: 45px;
+        }
+        
+        .custom-item:hover { background: rgba(255,255,255,0.12); }
+        .custom-item.active { border-color: #e94560; background: rgba(233,69,96,0.25); box-shadow: 0 0 20px rgba(233,69,96,0.2); }
+        .custom-item .emoji { font-size: 18px; display: block; }
+        .custom-item .label { font-size: 9px; opacity: 0.7; }
         
         #menuWorldSelect {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
             max-width: 600px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         
         .world-btn {
             background: linear-gradient(145deg, #1a1a3e, #2a2a5e);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 15px 25px;
+            border: 2px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 10px 18px;
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 100px;
+            min-width: 80px;
             text-align: center;
             font-family: inherit;
             touch-action: manipulation;
         }
         
-        .world-btn:hover {
-            transform: scale(1.05);
-            border-color: #e94560;
-            background: linear-gradient(145deg, #2a2a5e, #3a3a7e);
-        }
-        
-        .world-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .world-btn .emoji {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .world-btn .name {
-            font-size: 14px;
-        }
-        
-        .world-btn .levels-info {
-            font-size: 11px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 3px;
-        }
-        
-        #menuCustomization {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin: 10px 0 15px 0;
-            padding: 12px 18px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .custom-btn {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 8px 14px;
-            color: #fff;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            touch-action: manipulation;
-            min-height: 40px;
-        }
-        
-        .custom-btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: #e94560;
-        }
-        
-        .custom-btn.active {
-            border-color: #e94560;
-            background: rgba(233,69,96,0.2);
-        }
-        
-        .custom-btn .preview {
-            font-size: 20px;
-            display: block;
-        }
+        .world-btn:hover { transform: scale(1.05); border-color: rgba(233,69,96,0.4); }
+        .world-btn:active { transform: scale(0.95); }
+        .world-btn .emoji { font-size: 24px; display: block; margin-bottom: 3px; }
+        .world-btn .name { font-size: 12px; }
+        .world-btn .levels-info { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+        .world-btn.selected { border-color: #e94560; background: linear-gradient(145deg, #2a2a5e, #3a3a7e); box-shadow: 0 0 30px rgba(233,69,96,0.2); }
         
         #menuStartBtn {
             background: linear-gradient(145deg, #e94560, #c23152);
             border: none;
             border-radius: 16px;
-            padding: 16px 50px;
+            padding: 14px 45px;
             color: #fff;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
             touch-action: manipulation;
             box-shadow: 0 8px 30px rgba(233,69,96,0.4);
-            margin-top: 5px;
+            margin-top: 8px;
         }
         
-        #menuStartBtn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(233,69,96,0.6);
-        }
-        
-        #menuStartBtn:active {
-            transform: scale(0.95);
-        }
+        #menuStartBtn:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(233,69,96,0.6); }
+        #menuStartBtn:active { transform: scale(0.95); }
         
         /* ===== UI DEL JUEGO ===== */
         #topUI {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 16px;
+            padding: 8px 14px;
             background: rgba(0,0,0,0.7);
             border-radius: 12px 12px 0 0;
             border-bottom: 2px solid rgba(233,69,96,0.3);
@@ -224,46 +222,24 @@
         #topUI > div {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             color: #eee;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
-        .ui-icon {
-            font-size: 16px;
-        }
-        
-        .ui-value {
-            background: rgba(0,0,0,0.4);
-            padding: 2px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            min-width: 25px;
-            text-align: center;
-        }
-        
-        .health-hearts {
-            color: #ff4757;
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-        
-        .world-badge {
-            background: linear-gradient(135deg, #e94560, #c23152);
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .ui-icon { font-size: 14px; }
+        .ui-value { background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); min-width: 20px; text-align: center; }
+        .health-hearts { color: #ff4757; font-size: 14px; letter-spacing: 1px; }
+        .world-badge { background: linear-gradient(135deg, #e94560, #c23152); padding: 2px 10px; border-radius: 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .difficulty-badge { background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 20px; font-size: 10px; border: 1px solid rgba(255,255,255,0.1); }
         
         #bottomUI {
             display: flex;
             justify-content: center;
-            gap: 6px;
-            padding: 8px 12px;
+            gap: 5px;
+            padding: 6px 10px;
             background: rgba(0,0,0,0.7);
             border-radius: 0 0 12px 12px;
             border-top: 2px solid rgba(233,69,96,0.3);
@@ -274,53 +250,39 @@
             background: linear-gradient(145deg, #2a2a5e, #1a1a3e);
             color: #fff;
             border: 1px solid rgba(233,69,96,0.3);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 10px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
             touch-action: manipulation;
-            min-height: 38px;
-            min-width: 38px;
+            min-height: 34px;
+            min-width: 34px;
         }
         
-        #bottomUI button:hover {
-            background: linear-gradient(145deg, #3a3a7e, #2a2a5e);
-            transform: scale(1.05);
-            border-color: #e94560;
-        }
-        
-        #bottomUI button:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(145deg, #e94560, #c23152) !important;
-            border-color: #e94560 !important;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(145deg, #ff6b81, #e94560) !important;
-        }
+        #bottomUI button:hover { background: linear-gradient(145deg, #3a3a7e, #2a2a5e); transform: scale(1.05); border-color: #e94560; }
+        #bottomUI button:active { transform: scale(0.95); }
+        .btn-primary { background: linear-gradient(145deg, #e94560, #c23152) !important; border-color: #e94560 !important; }
+        .btn-primary:hover { background: linear-gradient(145deg, #ff6b81, #e94560) !important; }
         
         #mobileControls {
             display: none;
             justify-content: space-between;
-            padding: 8px 12px 4px 12px;
-            gap: 8px;
+            padding: 6px 10px 3px 10px;
+            gap: 6px;
         }
         
         .mobile-btn {
             background: rgba(255,255,255,0.08);
             border: 2px solid rgba(255,255,255,0.15);
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
-            font-size: 24px;
-            padding: 10px 16px;
-            min-width: 52px;
-            min-height: 52px;
+            font-size: 20px;
+            padding: 8px 14px;
+            min-width: 46px;
+            min-height: 46px;
             text-align: center;
             touch-action: manipulation;
             cursor: pointer;
@@ -329,27 +291,10 @@
             font-weight: bold;
         }
         
-        .mobile-btn:active {
-            background: rgba(233,69,96,0.4);
-            transform: scale(0.92);
-            border-color: #e94560;
-        }
-        
-        .mobile-btn.jump-btn {
-            background: rgba(233,69,96,0.3);
-            border-color: rgba(233,69,96,0.5);
-            min-width: 70px;
-            font-size: 18px;
-        }
-        
-        .mobile-btn.jump-btn:active {
-            background: rgba(233,69,96,0.6);
-        }
-        
-        .mobile-dpad {
-            display: flex;
-            gap: 6px;
-        }
+        .mobile-btn:active { background: rgba(233,69,96,0.4); transform: scale(0.92); border-color: #e94560; }
+        .mobile-btn.jump-btn { background: rgba(233,69,96,0.3); border-color: rgba(233,69,96,0.5); min-width: 60px; font-size: 16px; }
+        .mobile-btn.jump-btn:active { background: rgba(233,69,96,0.6); }
+        .mobile-dpad { display: flex; gap: 5px; }
         
         #messageOverlay {
             position: absolute;
@@ -367,11 +312,11 @@
         
         #messageText {
             color: #fff;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             text-shadow: 0 0 40px rgba(233,69,96,0.8), 0 4px 20px rgba(0,0,0,0.8);
             text-align: center;
-            padding: 16px 24px;
+            padding: 14px 20px;
             opacity: 0;
             transition: opacity 0.4s;
             background: rgba(0,0,0,0.6);
@@ -381,133 +326,42 @@
             max-width: 90%;
         }
         
-        #messageText.show {
-            opacity: 1;
-        }
+        #messageText.show { opacity: 1; }
+        .key-hint { color: rgba(255,255,255,0.2); font-size: 9px; text-align: center; padding: 3px 0 1px 0; letter-spacing: 1px; }
         
-        .key-hint {
-            color: rgba(255,255,255,0.25);
-            font-size: 10px;
-            text-align: center;
-            padding: 4px 0 2px 0;
-            letter-spacing: 1px;
-        }
-        
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            #gameWrapper {
-                padding: 8px;
-                border-radius: 15px;
-            }
-            #topUI {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-            #topUI > div {
-                font-size: 11px;
-                gap: 4px;
-            }
-            .health-hearts {
-                font-size: 13px;
-            }
-            .world-badge {
-                font-size: 9px;
-                padding: 2px 8px;
-            }
-            #bottomUI {
-                padding: 5px 8px;
-                gap: 4px;
-            }
-            #bottomUI button {
-                padding: 5px 10px;
-                font-size: 10px;
-                min-height: 32px;
-                min-width: 32px;
-            }
-            #mobileControls {
-                display: flex !important;
-            }
-            .key-hint {
-                display: none;
-            }
-            #menuTitle {
-                font-size: 28px;
-            }
-            #menuSubtitle {
-                font-size: 13px;
-            }
-            .world-btn {
-                padding: 10px 16px;
-                font-size: 13px;
-                min-width: 70px;
-            }
-            .world-btn .emoji {
-                font-size: 22px;
-            }
-            #menuStartBtn {
-                padding: 12px 30px;
-                font-size: 18px;
-            }
-            #menuCustomization {
-                padding: 8px 12px;
-                gap: 5px;
-            }
-            .custom-btn {
-                padding: 5px 10px;
-                font-size: 11px;
-                min-height: 32px;
-            }
-            #messageText {
-                font-size: 20px;
-                padding: 12px 16px;
-            }
+            #gameWrapper { padding: 6px; border-radius: 12px; }
+            #topUI { padding: 4px 8px; font-size: 10px; }
+            #topUI > div { font-size: 10px; gap: 3px; }
+            .health-hearts { font-size: 12px; }
+            .world-badge { font-size: 8px; padding: 2px 6px; }
+            #bottomUI { padding: 4px 6px; gap: 3px; }
+            #bottomUI button { padding: 4px 8px; font-size: 9px; min-height: 28px; min-width: 28px; }
+            #mobileControls { display: flex !important; }
+            .key-hint { display: none; }
+            #menuTitle { font-size: 24px; }
+            #menuSubtitle { font-size: 11px; }
+            .world-btn { padding: 6px 12px; font-size: 11px; min-width: 60px; }
+            .world-btn .emoji { font-size: 18px; }
+            #menuStartBtn { padding: 10px 25px; font-size: 16px; }
+            .menu-tab { padding: 5px 12px; font-size: 11px; }
+            .custom-item { padding: 4px 8px; font-size: 10px; min-width: 40px; }
+            .custom-item .emoji { font-size: 16px; }
+            .menu-panel { max-height: 140px; gap: 4px; padding: 6px; }
+            #messageText { font-size: 18px; padding: 10px 14px; }
         }
         
-        @media (pointer: coarse) {
-            #mobileControls {
-                display: flex !important;
-            }
-            .key-hint {
-                display: none;
-            }
-        }
-        
+        @media (pointer: coarse) { #mobileControls { display: flex !important; } .key-hint { display: none; } }
         @media (max-width: 480px) {
-            #topUI > div {
-                font-size: 9px;
-            }
-            .health-hearts {
-                font-size: 11px;
-            }
-            .mobile-btn {
-                font-size: 18px;
-                padding: 6px 12px;
-                min-width: 42px;
-                min-height: 42px;
-            }
-            .mobile-btn.jump-btn {
-                min-width: 56px;
-                font-size: 14px;
-            }
-            #menuTitle {
-                font-size: 22px;
-            }
-            .world-btn {
-                padding: 8px 12px;
-                font-size: 11px;
-                min-width: 60px;
-            }
-            .world-btn .emoji {
-                font-size: 18px;
-            }
-            #menuStartBtn {
-                padding: 10px 20px;
-                font-size: 15px;
-            }
-            #messageText {
-                font-size: 16px;
-                padding: 10px 14px;
-            }
+            #topUI > div { font-size: 8px; }
+            .health-hearts { font-size: 10px; }
+            .mobile-btn { font-size: 16px; padding: 5px 10px; min-width: 36px; min-height: 36px; }
+            .mobile-btn.jump-btn { min-width: 48px; font-size: 12px; }
+            #menuTitle { font-size: 20px; }
+            .world-btn { padding: 4px 8px; font-size: 10px; min-width: 50px; }
+            .world-btn .emoji { font-size: 14px; }
+            #menuStartBtn { padding: 8px 18px; font-size: 14px; }
+            #messageText { font-size: 14px; padding: 8px 12px; }
         }
     </style>
 </head>
@@ -521,73 +375,64 @@
             <div id="menuSubtitle">— EL DESAFÍO DEFINITIVO —</div>
             
             <div id="menuWorldSelect">
-                <button class="world-btn" data-world="0">
-                    <span class="emoji">🌲</span>
-                    <span class="name">Bosque</span>
-                    <span class="levels-info">50 niveles</span>
-                </button>
-                <button class="world-btn" data-world="1">
-                    <span class="emoji">🏜️</span>
-                    <span class="name">Desierto</span>
-                    <span class="levels-info">50 niveles</span>
-                </button>
-                <button class="world-btn" data-world="2">
-                    <span class="emoji">❄️</span>
-                    <span class="name">Tundra</span>
-                    <span class="levels-info">50 niveles</span>
-                </button>
-                <button class="world-btn" data-world="3">
-                    <span class="emoji">🌋</span>
-                    <span class="name">Volcán</span>
-                    <span class="levels-info">50 niveles</span>
-                </button>
-                <button class="world-btn" data-world="4">
-                    <span class="emoji">🌌</span>
-                    <span class="name">Espacio</span>
-                    <span class="levels-info">50 niveles</span>
-                </button>
+                <button class="world-btn selected" data-world="0"><span class="emoji">🌲</span><span class="name">Bosque</span><span class="levels-info">50 niveles</span></button>
+                <button class="world-btn" data-world="1"><span class="emoji">🏜️</span><span class="name">Desierto</span><span class="levels-info">50 niveles</span></button>
+                <button class="world-btn" data-world="2"><span class="emoji">❄️</span><span class="name">Tundra</span><span class="levels-info">50 niveles</span></button>
+                <button class="world-btn" data-world="3"><span class="emoji">🌋</span><span class="name">Volcán</span><span class="levels-info">50 niveles</span></button>
+                <button class="world-btn" data-world="4"><span class="emoji">🌌</span><span class="name">Espacio</span><span class="levels-info">50 niveles</span></button>
             </div>
             
-            <div id="menuCustomization">
-                <button class="custom-btn active" data-custom="color" data-value="blue">
-                    <span class="preview">🔵</span> Azul
-                </button>
-                <button class="custom-btn" data-custom="color" data-value="red">
-                    <span class="preview">🔴</span> Rojo
-                </button>
-                <button class="custom-btn" data-custom="color" data-value="green">
-                    <span class="preview">🟢</span> Verde
-                </button>
-                <button class="custom-btn" data-custom="color" data-value="purple">
-                    <span class="preview">🟣</span> Púrpura
-                </button>
-                <button class="custom-btn" data-custom="color" data-value="gold">
-                    <span class="preview">🟡</span> Dorado
-                </button>
-                <button class="custom-btn" data-custom="hat" data-value="none">
-                    <span class="preview">👤</span> Sin
-                </button>
-                <button class="custom-btn" data-custom="hat" data-value="cap">
-                    <span class="preview">🧢</span> Gorra
-                </button>
-                <button class="custom-btn" data-custom="hat" data-value="tophat">
-                    <span class="preview">🎩</span> Chistera
-                </button>
-                <button class="custom-btn" data-custom="hat" data-value="crown">
-                    <span class="preview">👑</span> Corona
-                </button>
-                <button class="custom-btn" data-custom="accessory" data-value="none">
-                    <span class="preview">❌</span> Sin
-                </button>
-                <button class="custom-btn" data-custom="accessory" data-value="scarf">
-                    <span class="preview">🧣</span> Bufanda
-                </button>
-                <button class="custom-btn" data-custom="accessory" data-value="glasses">
-                    <span class="preview">🕶️</span> Gafas
-                </button>
-                <button class="custom-btn" data-custom="accessory" data-value="cape">
-                    <span class="preview">🧥</span> Capa
-                </button>
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-tab="colors">🎨 Colores</button>
+                <button class="menu-tab" data-tab="hats">🎩 Sombreros</button>
+                <button class="menu-tab" data-tab="accessories">✨ Accesorios</button>
+                <button class="menu-tab" data-tab="extras">⭐ Extras</button>
+            </div>
+            
+            <div class="menu-panel active" id="panel-colors">
+                <button class="custom-item active" data-custom="color" data-value="blue"><span class="emoji">🔵</span><span class="label">Azul</span></button>
+                <button class="custom-item" data-custom="color" data-value="red"><span class="emoji">🔴</span><span class="label">Rojo</span></button>
+                <button class="custom-item" data-custom="color" data-value="green"><span class="emoji">🟢</span><span class="label">Verde</span></button>
+                <button class="custom-item" data-custom="color" data-value="purple"><span class="emoji">🟣</span><span class="label">Púrpura</span></button>
+                <button class="custom-item" data-custom="color" data-value="gold"><span class="emoji">🟡</span><span class="label">Dorado</span></button>
+                <button class="custom-item" data-custom="color" data-value="pink"><span class="emoji">🩷</span><span class="label">Rosa</span></button>
+                <button class="custom-item" data-custom="color" data-value="cyan"><span class="emoji">🩵</span><span class="label">Cian</span></button>
+                <button class="custom-item" data-custom="color" data-value="orange"><span class="emoji">🟠</span><span class="label">Naranja</span></button>
+            </div>
+            
+            <div class="menu-panel" id="panel-hats">
+                <button class="custom-item active" data-custom="hat" data-value="none"><span class="emoji">👤</span><span class="label">Sin</span></button>
+                <button class="custom-item" data-custom="hat" data-value="cap"><span class="emoji">🧢</span><span class="label">Gorra</span></button>
+                <button class="custom-item" data-custom="hat" data-value="tophat"><span class="emoji">🎩</span><span class="label">Chistera</span></button>
+                <button class="custom-item" data-custom="hat" data-value="crown"><span class="emoji">👑</span><span class="label">Corona</span></button>
+                <button class="custom-item" data-custom="hat" data-value="sombrero"><span class="emoji">🤠</span><span class="label">Sombrero</span></button>
+                <button class="custom-item" data-custom="hat" data-value="wizard"><span class="emoji">🧙</span><span class="label">Mago</span></button>
+                <button class="custom-item" data-custom="hat" data-value="santa"><span class="emoji">🎅</span><span class="label">Navidad</span></button>
+                <button class="custom-item" data-custom="hat" data-value="ninja"><span class="emoji">🥷</span><span class="label">Ninja</span></button>
+                <button class="custom-item" data-custom="hat" data-value="pirates"><span class="emoji">🏴‍☠️</span><span class="label">Pirata</span></button>
+            </div>
+            
+            <div class="menu-panel" id="panel-accessories">
+                <button class="custom-item active" data-custom="accessory" data-value="none"><span class="emoji">❌</span><span class="label">Sin</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="scarf"><span class="emoji">🧣</span><span class="label">Bufanda</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="glasses"><span class="emoji">🕶️</span><span class="label">Gafas</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="cape"><span class="emoji">🧥</span><span class="label">Capa</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="backpack"><span class="emoji">🎒</span><span class="label">Mochila</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="wings"><span class="emoji">🦋</span><span class="label">Alas</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="shield"><span class="emoji">🛡️</span><span class="label">Escudo</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="sword"><span class="emoji">⚔️</span><span class="label">Espada</span></button>
+                <button class="custom-item" data-custom="accessory" data-value="bow"><span class="emoji">🏹</span><span class="label">Arco</span></button>
+            </div>
+            
+            <div class="menu-panel" id="panel-extras">
+                <button class="custom-item active" data-custom="extra" data-value="none"><span class="emoji">❌</span><span class="label">Sin</span></button>
+                <button class="custom-item" data-custom="extra" data-value="glow"><span class="emoji">✨</span><span class="label">Brillo</span></button>
+                <button class="custom-item" data-custom="extra" data-value="fire"><span class="emoji">🔥</span><span class="label">Fuego</span></button>
+                <button class="custom-item" data-custom="extra" data-value="ice"><span class="emoji">❄️</span><span class="label">Hielo</span></button>
+                <button class="custom-item" data-custom="extra" data-value="electric"><span class="emoji">⚡</span><span class="label">Eléctrico</span></button>
+                <button class="custom-item" data-custom="extra" data-value="rainbow"><span class="emoji">🌈</span><span class="label">Arcoíris</span></button>
+                <button class="custom-item" data-custom="extra" data-value="shadow"><span class="emoji">🌑</span><span class="label">Sombra</span></button>
+                <button class="custom-item" data-custom="extra" data-value="star"><span class="emoji">⭐</span><span class="label">Estrella</span></button>
             </div>
             
             <button id="menuStartBtn">🎮 JUGAR</button>
@@ -602,6 +447,7 @@
                 <span class="ui-value" id="levelDisplay">1</span>
                 <span style="color:rgba(255,255,255,0.3);">/</span>
                 <span style="color:rgba(255,255,255,0.5);" id="maxLevelDisplay">50</span>
+                <span class="difficulty-badge" id="difficultyDisplay">⭐</span>
             </div>
             <div>
                 <span class="ui-icon">❤️</span>
@@ -617,28 +463,24 @@
                 <span class="ui-value" id="deathsDisplay">0</span>
             </div>
             <div>
-                <button id="menuBtn" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:4px 10px;color:#fff;cursor:pointer;font-size:16px;">☰</button>
+                <button id="menuBtn" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:3px 10px;color:#fff;cursor:pointer;font-size:16px;">☰</button>
             </div>
         </div>
         
-        <!-- Canvas -->
         <canvas id="gameCanvas" width="900" height="550"></canvas>
         
-        <!-- Mensajes -->
         <div id="messageOverlay">
             <div id="messageText"></div>
         </div>
         
-        <!-- Controles Móviles -->
         <div id="mobileControls">
             <div class="mobile-dpad">
                 <div class="mobile-btn" id="btnLeft">◀</div>
                 <div class="mobile-btn" id="btnRight">▶</div>
             </div>
-            <div class="mobile-btn jump-btn" id="btnJump">▲<br><span style="font-size:9px;">SALTAR</span></div>
+            <div class="mobile-btn jump-btn" id="btnJump">▲<br><span style="font-size:8px;">SALTAR</span></div>
         </div>
         
-        <!-- UI Inferior -->
         <div id="bottomUI">
             <button id="restartBtn">🔄 Reiniciar</button>
             <button id="prevWorldBtn">◀ Mundo</button>
@@ -654,17 +496,16 @@
 
 <script>
     // ================================================================
-    //  DEVIL'S ASCENT - EDICIÓN DEFINITIVA
-    //  Menú de inicio | Brazos | Personalización | Todas las trampas
-    //  Paso automático al tocar la meta | 250 niveles
+    //  DEVIL'S ASCENT - EDICIÓN EXTREMA (CORREGIDA)
+    //  - Paso de nivel 100% funcionando
+    //  - Más trampas en todos los niveles
+    //  - Dificultad progresiva nivel por nivel
     // ================================================================
     
-    // --- Configuración Canvas ---
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const W = 900, H = 550;
     
-    // --- Elementos UI ---
     const menuOverlay = document.getElementById('menuOverlay');
     const menuStartBtn = document.getElementById('menuStartBtn');
     const menuBtn = document.getElementById('menuBtn');
@@ -674,9 +515,9 @@
     const heartsDisplay = document.getElementById('heartsDisplay');
     const timerDisplay = document.getElementById('timerDisplay');
     const deathsDisplay = document.getElementById('deathsDisplay');
+    const difficultyDisplay = document.getElementById('difficultyDisplay');
     const messageText = document.getElementById('messageText');
     
-    // --- Constantes ---
     const GRAVITY = 0.55;
     const FRICTION = 0.88;
     const PLAYER_SPEED = 4.2;
@@ -684,13 +525,12 @@
     const MAX_HEARTS = 3;
     const TOTAL_WORLDS = 5;
     const LEVELS_PER_WORLD = 50;
-    const TOTAL_LEVELS = TOTAL_WORLDS * LEVELS_PER_WORLD;
     
-    // --- Personalización del jugador ---
     const customization = {
         color: 'blue',
         hat: 'none',
-        accessory: 'none'
+        accessory: 'none',
+        extra: 'none'
     };
     
     const colorMap = {
@@ -698,10 +538,12 @@
         red: { body: '#ff6b6b', bodyDark: '#c0392b', skin: '#ffccbc', accent: '#f39c12' },
         green: { body: '#6bcb77', bodyDark: '#27ae60', skin: '#ffccbc', accent: '#f1c40f' },
         purple: { body: '#a855f7', bodyDark: '#7c3aed', skin: '#ffccbc', accent: '#ec4899' },
-        gold: { body: '#fbbf24', bodyDark: '#d97706', skin: '#ffccbc', accent: '#e94560' }
+        gold: { body: '#fbbf24', bodyDark: '#d97706', skin: '#ffccbc', accent: '#e94560' },
+        pink: { body: '#f472b6', bodyDark: '#db2777', skin: '#ffccbc', accent: '#8b5cf6' },
+        cyan: { body: '#22d3ee', bodyDark: '#0891b2', skin: '#ffccbc', accent: '#f472b6' },
+        orange: { body: '#fb923c', bodyDark: '#ea580c', skin: '#ffccbc', accent: '#e94560' }
     };
     
-    // --- Estado ---
     let currentWorld = 0;
     let currentLevelInWorld = 0;
     let hearts = MAX_HEARTS;
@@ -710,44 +552,36 @@
     let gameRunning = true;
     let levelComplete = false;
     let deathAnimation = false;
-    let deathTimer = 0;
     let particles = [];
     let frameCount = 0;
     let messageTimeout = null;
     let comboCount = 0;
     let showMenu = true;
     let selectedWorld = 0;
+    let levelTransitioning = false;
+    let nextLevelTimer = 0;
     
-    // --- Teclas ---
     const keys = {};
     
-    // --- Jugador ---
     const player = {
-        x: 60,
-        y: 400,
-        w: 30,
-        h: 46,
-        vx: 0,
-        vy: 0,
+        x: 60, y: 400, w: 30, h: 46,
+        vx: 0, vy: 0,
         onGround: false,
         facing: 1,
         jumping: false,
         walkFrame: 0,
         walkTimer: 0,
-        airTimer: 0,
         hurtTimer: 0,
         invincible: false,
         invincibleTimer: 0,
-        armAngle: 0,
-        legAngle: 0
+        armAngle: 0
     };
     
-    // --- Niveles ---
     let levels = [];
     let levelState = {};
     
     // ================================================================
-    //  GENERADOR DE NIVELES (TODAS LAS TRAMPAS INCLUIDAS)
+    //  GENERADOR DE NIVELES CON DIFICULTAD PROGRESIVA
     // ================================================================
     function generateAllLevels() {
         levels = [];
@@ -762,19 +596,16 @@
         
         for (let w = 0; w < TOTAL_WORLDS; w++) {
             const theme = worldThemes[w];
-            
             for (let lv = 0; lv < LEVELS_PER_WORLD; lv++) {
-                const difficulty = Math.min(2, Math.floor(lv / 17));
                 const levelNum = lv + 1;
+                // Dificultad progresiva: 0-2 basado en el nivel
+                const difficulty = Math.min(3, Math.floor(levelNum / 12));
                 const level = generateLevel(w, lv, difficulty, theme);
                 levels.push(level);
             }
         }
     }
     
-    // ================================================================
-    //  GENERAR UN NIVEL (CON TODAS LAS TRAMPAS)
-    // ================================================================
     function generateLevel(world, levelIndex, difficulty, theme) {
         const levelNum = levelIndex + 1;
         const isBossLevel = (levelNum % 10 === 0);
@@ -800,45 +631,48 @@
             fireParticles: false,
             invertedGravity: false,
             wind: 0,
-            name: generateLevelName(world, levelNum, isBossLevel, isBonusLevel)
+            name: generateLevelName(world, levelNum, isBossLevel, isBonusLevel),
+            // Dificultad visible
+            starRating: Math.min(5, 1 + difficulty + Math.floor(levelNum / 15))
         };
         
-        // --- Plataforma base ---
+        // === PLATAFORMA BASE ===
         level.platforms.push({x: 0, y: 510, w: 900, h: 40, type: 'solid'});
         
-        // --- Generar plataformas ---
-        const numPlatforms = 4 + difficulty * 2 + Math.floor(levelNum / 10);
-        const platformSpacing = Math.max(65, 120 - difficulty * 15);
-        const heightVariation = 40 + difficulty * 20 + Math.floor(levelNum / 8) * 5;
+        // === PLATAFORMAS (más difíciles con el nivel) ===
+        const numPlatforms = 4 + difficulty * 2 + Math.floor(levelNum / 8);
+        const platformSpacing = Math.max(55, 130 - difficulty * 18 - Math.floor(levelNum / 15) * 2);
+        const heightVariation = 40 + difficulty * 25 + Math.floor(levelNum / 8) * 4;
         
         let lastX = 80;
         let lastY = 470;
         let platformCount = 0;
-        let minHeight = 100 + difficulty * 30 + Math.floor(levelNum / 15) * 10;
+        let minHeight = Math.max(80, 120 - difficulty * 10 - Math.floor(levelNum / 10) * 3);
         
-        for (let i = 0; i < numPlatforms && platformCount < 20; i++) {
-            const pWidth = 45 + Math.floor(Math.random() * 55) + (isBonusLevel ? 20 : 0);
-            const pX = lastX + platformSpacing + Math.random() * 40;
-            const pY = Math.max(minHeight, lastY - heightVariation * (0.5 + Math.random() * 0.9));
+        for (let i = 0; i < numPlatforms && platformCount < 22; i++) {
+            const pWidth = 40 + Math.floor(Math.random() * 50) + (isBonusLevel ? 25 : 0);
+            const pX = lastX + platformSpacing + Math.random() * 30;
+            const pY = Math.max(minHeight, lastY - heightVariation * (0.4 + Math.random() * 0.9));
             
-            if (pY < minHeight + 30 && i > 2) continue;
+            if (pY < minHeight + 20 && i > 2) continue;
             
             let type = 'solid';
             const rand = Math.random();
-            if (difficulty >= 1 && rand < 0.15 + difficulty * 0.1) type = 'moving';
-            if (difficulty >= 2 && rand > 0.8 && rand < 0.92) type = 'falling';
+            // Más plataformas móviles y que caen con la dificultad
+            if (difficulty >= 1 && rand < 0.12 + difficulty * 0.12 + levelNum * 0.002) type = 'moving';
+            if (difficulty >= 2 && rand > 0.78 && rand < 0.88 + difficulty * 0.04) type = 'falling';
             if (isBonusLevel && rand < 0.25) type = 'moving';
             
             const platform = {x: pX, y: pY, w: pWidth, h: 18, type: type};
             
             if (type === 'moving') {
-                platform.moveX = 70 + Math.random() * 130;
-                platform.speed = 0.7 + Math.random() * 1.3;
+                platform.moveX = 60 + Math.random() * 140 + difficulty * 10;
+                platform.speed = 0.6 + Math.random() * 1.4 + difficulty * 0.1;
                 platform.phase = Math.random() * Math.PI * 2;
                 level.movingPlatforms.push(platform);
             }
             if (type === 'falling') {
-                platform.fallDelay = 25 + Math.floor(Math.random() * 45);
+                platform.fallDelay = Math.max(15, 40 - difficulty * 8 - Math.floor(levelNum / 10));
                 level.fallingPlatforms.push(platform);
             }
             
@@ -849,29 +683,22 @@
             minHeight = Math.min(minHeight, pY);
         }
         
-        // --- Plataforma final ---
         level.platforms.push({x: 760, y: 470, w: 100, h: 18, type: 'solid'});
         
-        // ============================================================
-        //  TODAS LAS TRAMPAS (PÚAS FIJAS, MÓVILES, LÁSERES, ETC.)
-        // ============================================================
-        
-        // --- Púas fijas (en el suelo y plataformas) ---
-        const numSpikes = 2 + difficulty * 2 + Math.floor(levelNum / 10);
-        for (let i = 0; i < Math.min(numSpikes, 14); i++) {
+        // === MÁS PÚAS FIJAS ===
+        const numSpikes = 3 + difficulty * 3 + Math.floor(levelNum / 8);
+        for (let i = 0; i < Math.min(numSpikes, 18); i++) {
             let spikeX, spikeY;
             let attempts = 0;
             let valid = false;
             
-            while (!valid && attempts < 25) {
-                spikeX = 40 + Math.random() * 760;
-                // Poner púas en el suelo o en plataformas
-                if (Math.random() < 0.6) {
+            while (!valid && attempts < 30) {
+                spikeX = 30 + Math.random() * 780;
+                if (Math.random() < 0.6 || difficulty < 1) {
                     spikeY = 490 + Math.random() * 10;
                 } else {
-                    // Buscar una plataforma
                     const p = level.platforms[Math.floor(Math.random() * level.platforms.length)];
-                    if (p && p.y > 400) {
+                    if (p && p.y > 380 && p.y < 500) {
                         spikeX = p.x + 10 + Math.random() * (p.w - 30);
                         spikeY = p.y - 16;
                     } else {
@@ -880,40 +707,29 @@
                 }
                 valid = true;
                 for (const s of level.spikes) {
-                    if (Math.abs(s.x - spikeX) < 30 && Math.abs(s.y - spikeY) < 30) {
-                        valid = false;
-                        break;
-                    }
+                    if (Math.abs(s.x - spikeX) < 25 && Math.abs(s.y - spikeY) < 25) { valid = false; break; }
                 }
                 for (const p of level.platforms) {
-                    if (spikeX > p.x - 15 && spikeX < p.x + p.w + 15 && spikeY > p.y - 20 && spikeY < p.y + 10) {
-                        valid = false;
-                        break;
+                    if (spikeX > p.x - 12 && spikeX < p.x + p.w + 12 && spikeY > p.y - 18 && spikeY < p.y + 8) {
+                        valid = false; break;
                     }
                 }
                 attempts++;
             }
             
             if (valid) {
-                level.spikes.push({
-                    x: spikeX,
-                    y: spikeY,
-                    w: 22,
-                    h: 16,
-                    type: 'spike'
-                });
+                level.spikes.push({ x: spikeX, y: spikeY, w: 22, h: 16, type: 'spike' });
             }
         }
         
-        // --- Trampas activas (púas pulsantes y láseres) ---
-        const numTraps = 1 + difficulty + Math.floor(levelNum / 12);
-        for (let i = 0; i < Math.min(numTraps, 8); i++) {
-            let trapX = 60 + Math.random() * 720;
+        // === MÁS TRAMPAS ACTIVAS ===
+        const numTraps = 2 + difficulty * 2 + Math.floor(levelNum / 10);
+        for (let i = 0; i < Math.min(numTraps, 12); i++) {
+            let trapX = 50 + Math.random() * 750;
             let trapY = 490 + Math.random() * 10;
             
-            // Buscar lugar en plataformas
             for (const p of level.platforms) {
-                if (trapX > p.x + 10 && trapX < p.x + p.w - 20 && p.y > 450) {
+                if (trapX > p.x + 10 && trapX < p.x + p.w - 20 && p.y > 440) {
                     trapY = p.y - 16;
                     break;
                 }
@@ -923,20 +739,20 @@
             level.traps.push({
                 x: trapX,
                 y: trapY,
-                w: 28 + Math.random() * 24,
+                w: 26 + Math.random() * 28,
                 h: 18,
                 type: trapType,
                 active: true,
                 pattern: Math.random() < 0.5 ? 'pulse' : 'sweep',
                 phase: Math.random() * Math.PI * 2,
-                speed: 1.2 + Math.random() * 2.2
+                speed: 1.0 + Math.random() * 2.5 + difficulty * 0.2
             });
         }
         
-        // --- Trampas en el suelo (adicionales) ---
+        // === TRAMPAS ADICIONALES EN EL SUELO ===
         if (difficulty >= 1) {
-            for (let i = 0; i < 1 + difficulty; i++) {
-                const x = 100 + i * 200 + Math.random() * 80;
+            for (let i = 0; i < 2 + difficulty + Math.floor(levelNum / 15); i++) {
+                const x = 80 + i * 180 + Math.random() * 60;
                 level.traps.push({
                     x: x,
                     y: 490,
@@ -945,38 +761,56 @@
                     type: 'spike',
                     active: true,
                     pattern: 'pulse',
-                    phase: i * 0.5,
-                    speed: 1.5 + Math.random()
+                    phase: i * 0.4,
+                    speed: 1.3 + Math.random() * 0.8 + difficulty * 0.1
                 });
             }
         }
         
-        // --- Efectos especiales ---
-        if (world === 2 && levelNum > 15) level.darkMode = true;
-        if (world === 3 && levelNum > 20) level.fireParticles = true;
-        if (world === 4 && levelNum > 30) level.invertedGravity = true;
-        if (world === 4 && levelNum > 40) level.wind = (Math.random() - 0.5) * 0.3;
+        // === TRAMPAS EN PLATAFORMAS (dificultad alta) ===
+        if (difficulty >= 2) {
+            for (const p of level.platforms) {
+                if (p.y > 400 && p.y < 480 && p.w > 50 && Math.random() < 0.15 + difficulty * 0.05) {
+                    level.traps.push({
+                        x: p.x + 10 + Math.random() * (p.w - 30),
+                        y: p.y - 16,
+                        w: 28,
+                        h: 18,
+                        type: Math.random() < 0.5 ? 'spike' : 'laser',
+                        active: true,
+                        pattern: 'sweep',
+                        phase: Math.random() * Math.PI * 2,
+                        speed: 1.5 + Math.random() * 1.5
+                    });
+                }
+            }
+        }
         
-        // --- Niveles jefe ---
+        // === EFECTOS ESPECIALES ===
+        if (world === 2 && levelNum > 12) level.darkMode = true;
+        if (world === 3 && levelNum > 15) level.fireParticles = true;
+        if (world === 4 && levelNum > 25) level.invertedGravity = true;
+        if (world === 4 && levelNum > 35) level.wind = (Math.random() - 0.5) * 0.4;
+        
+        // === NIVELES JEFE ===
         if (isBossLevel) {
             level.bossMode = true;
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5 + difficulty; i++) {
                 level.traps.push({
-                    x: 80 + i * 200 + Math.random() * 60,
+                    x: 60 + i * 170 + Math.random() * 50,
                     y: 490,
                     w: 35,
                     h: 18,
                     type: 'laser',
                     active: true,
                     pattern: 'sweep',
-                    phase: i * 0.25,
-                    speed: 2 + Math.random() * 0.5
+                    phase: i * 0.2,
+                    speed: 2 + Math.random() * 0.8
                 });
             }
-            // Más púas en nivel jefe
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 8 + difficulty * 2; i++) {
                 level.spikes.push({
-                    x: 60 + i * 140 + Math.random() * 30,
+                    x: 40 + i * 110 + Math.random() * 30,
                     y: 490,
                     w: 22,
                     h: 16,
@@ -986,7 +820,7 @@
             level.goal.x = 850;
         }
         
-        // --- Niveles bonus ---
+        // === NIVELES BONUS ===
         if (isBonusLevel && !isBossLevel) {
             level.bonusMode = true;
             level.goal.x = 850;
@@ -996,9 +830,6 @@
         return level;
     }
     
-    // ================================================================
-    //  GENERAR NOMBRE DEL NIVEL
-    // ================================================================
     function generateLevelName(world, num, isBoss, isBonus) {
         const worldNames = ['Bosque', 'Desierto', 'Tundra', 'Volcán', 'Espacio'];
         const prefixes = ['Camino', 'Sendero', 'Cueva', 'Pico', 'Valle', 'Cascada', 'Abismo', 'Cumbre', 'Cañón', 'Cráter'];
@@ -1035,6 +866,8 @@
         player.invincible = false;
         player.invincibleTimer = 0;
         player.hurtTimer = 0;
+        levelTransitioning = false;
+        nextLevelTimer = 0;
         
         levelState = {
             movingPlatforms: [],
@@ -1073,18 +906,17 @@
         gameTime = 0;
         levelComplete = false;
         deathAnimation = false;
-        deathTimer = 0;
         particles = [];
-        comboCount = 0;
         
         updateUI();
         
         const levelNum = currentLevelInWorld + 1;
         const worldNum = currentWorld + 1;
-        let msg = `🌍 Mundo ${worldNum} - Nivel ${levelNum}`;
-        if (level.isBossLevel) msg = `👑 ${level.name}`;
-        else if (level.isBonusLevel) msg = `⭐ ${level.name}`;
-        else msg = `${level.name}`;
+        const stars = '⭐'.repeat(Math.min(5, level.starRating || 1));
+        let msg = `🌍 Mundo ${worldNum} - Nivel ${levelNum} ${stars}`;
+        if (level.isBossLevel) msg = `👑 ${level.name} ${stars}`;
+        else if (level.isBonusLevel) msg = `⭐ ${level.name} ${stars}`;
+        else msg = `${level.name} ${stars}`;
         
         showMessage(msg, 1800);
         gameRunning = true;
@@ -1096,10 +928,16 @@
     function updateUI() {
         const worldNum = currentWorld + 1;
         const levelNum = currentLevelInWorld + 1;
+        const level = levels[currentWorld * LEVELS_PER_WORLD + currentLevelInWorld];
         
         worldDisplay.textContent = `Mundo ${worldNum}`;
         levelDisplay.textContent = levelNum;
         maxLevelDisplay.textContent = LEVELS_PER_WORLD;
+        
+        if (level) {
+            const stars = '⭐'.repeat(Math.min(5, level.starRating || 1));
+            difficultyDisplay.textContent = stars;
+        }
         
         let heartsStr = '';
         for (let i = 0; i < MAX_HEARTS; i++) {
@@ -1111,9 +949,6 @@
         deathsDisplay.textContent = totalDeaths;
     }
     
-    // ================================================================
-    //  MOSTRAR MENSAJE
-    // ================================================================
     function showMessage(text, duration = 2000) {
         messageText.textContent = text;
         messageText.classList.add('show');
@@ -1123,19 +958,18 @@
         }, duration);
     }
     
-    // ================================================================
-    //  COLISIONES
-    // ================================================================
     function rectCollide(a, b) {
-        return a.x < b.x + b.w && a.x + a.w > b.x &&
-               a.y < b.y + b.h && a.y + a.h > b.y;
+        return a.x < b.x + b.w && 
+               a.x + a.w > b.x &&
+               a.y < b.y + b.h && 
+               a.y + a.h > b.y;
     }
     
     // ================================================================
     //  ACTUALIZACIÓN DEL JUEGO
     // ================================================================
     function update() {
-        if (!gameRunning || deathAnimation || levelComplete || showMenu) return;
+        if (!gameRunning || deathAnimation || levelComplete || showMenu || levelTransitioning) return;
         
         const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
         const level = levels[levelIndex];
@@ -1149,7 +983,7 @@
             if (player.invincibleTimer <= 0) player.invincible = false;
         }
         
-        // --- Gravedad ---
+        // Gravedad
         if (level.invertedGravity) {
             player.vy -= GRAVITY * 0.7;
         } else {
@@ -1160,7 +994,7 @@
             player.vx += level.wind * 0.1;
         }
         
-        // --- Movimiento ---
+        // Movimiento
         let moveX = 0;
         if (keys['ArrowLeft'] || keys['KeyA'] || keys['left']) moveX = -1;
         if (keys['ArrowRight'] || keys['KeyD'] || keys['right']) moveX = 1;
@@ -1172,7 +1006,7 @@
             player.vx = maxSpeed * Math.sign(player.vx);
         }
         
-        // --- Salto ---
+        // Salto
         const jumpKey = keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || keys['jump'];
         if (jumpKey && player.onGround) {
             player.vy = JUMP_FORCE;
@@ -1196,7 +1030,7 @@
             player.jumping = false;
         }
         
-        // --- Animación ---
+        // Animación
         if (Math.abs(player.vx) > 0.5 && player.onGround) {
             player.walkTimer += Math.abs(player.vx) * 0.05;
             if (player.walkTimer > 1) {
@@ -1211,14 +1045,13 @@
         if (moveX > 0) player.facing = 1;
         else if (moveX < 0) player.facing = -1;
         
-        // --- Animación de brazos ---
         if (!player.onGround) {
             player.armAngle += 0.08;
         } else if (Math.abs(player.vx) > 0.5) {
             player.armAngle += 0.05 * Math.sign(player.vx);
         }
         
-        // --- Movimiento horizontal ---
+        // Movimiento horizontal
         player.x += player.vx;
         
         for (const p of level.platforms) {
@@ -1248,7 +1081,7 @@
             }
         }
         
-        // --- Movimiento vertical ---
+        // Movimiento vertical
         player.y += player.vy;
         player.onGround = false;
         
@@ -1281,12 +1114,12 @@
             }
         }
         
-        // --- Actualizar plataformas móviles ---
+        // Actualizar plataformas móviles
         for (const state of levelState.movingPlatforms) {
             state.timer += 0.025;
         }
         
-        // --- Actualizar plataformas que caen ---
+        // Actualizar plataformas que caen
         for (const state of levelState.fallingPlatforms) {
             const p = level.platforms[level.platforms.indexOf(level.fallingPlatforms[state.index])];
             if (!p) continue;
@@ -1314,7 +1147,7 @@
             }
         }
         
-        // --- Colisiones con púas fijas ---
+        // Colisiones con púas fijas
         if (!player.invincible) {
             for (const spike of level.spikes) {
                 if (rectCollide(player, spike)) {
@@ -1323,7 +1156,7 @@
                 }
             }
             
-            // --- Colisiones con trampas activas ---
+            // Colisiones con trampas activas
             for (let i = 0; i < level.traps.length; i++) {
                 const trap = level.traps[i];
                 if (!trap.active) continue;
@@ -1333,10 +1166,10 @@
                 
                 let active = false;
                 if (trap.pattern === 'pulse') {
-                    active = Math.sin(timer * 3 * trap.speed) > 0.2;
+                    active = Math.sin(timer * 3 * trap.speed) > 0.15;
                 } else if (trap.pattern === 'sweep') {
                     const phase = trap.phase || 0;
-                    active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.3;
+                    active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.25;
                 }
                 
                 if (active) {
@@ -1354,57 +1187,99 @@
             }
         }
         
-        // --- Colisión con la meta (PASO AUTOMÁTICO) ---
-        if (rectCollide(player, level.goal)) {
-            levelComplete = true;
-            const levelNum = currentLevelInWorld + 1;
-            const worldNum = currentWorld + 1;
+        // ============================================================
+        //  COLISIÓN CON LA META - PASO DE NIVEL (CORREGIDO)
+        // ============================================================
+        if (!levelTransitioning) {
+            const goal = level.goal;
+            // Verificar colisión con la meta de manera más precisa
+            const detectionPadding = 10;
             
-            comboCount++;
-            let bonusMsg = '';
-            if (comboCount >= 5) bonusMsg = ' 🔥 ¡Racha de 5!';
-            if (comboCount >= 10) bonusMsg = ' ⚡ ¡Racha de 10!';
+            const playerRect = {
+                x: player.x - detectionPadding,
+                y: player.y - detectionPadding,
+                w: player.w + detectionPadding * 2,
+                h: player.h + detectionPadding * 2
+            };
             
-            // Partículas de celebración
-            for (let i = 0; i < 30; i++) {
-                particles.push({
-                    x: level.goal.x + level.goal.w/2,
-                    y: level.goal.y + level.goal.h/2,
-                    vx: (Math.random() - 0.5) * 12,
-                    vy: (Math.random() - 0.5) * 12 - 4,
-                    life: 1 + Math.random() * 0.5,
-                    color: `hsl(${Math.random() * 60 + 20}, 100%, 60%)`,
-                    size: 4 + Math.random() * 6
-                });
-            }
+            const goalRect = {
+                x: goal.x - detectionPadding,
+                y: goal.y - detectionPadding,
+                w: goal.w + detectionPadding * 2,
+                h: goal.h + detectionPadding * 2
+            };
             
-            if (currentLevelInWorld >= LEVELS_PER_WORLD - 1) {
-                if (currentWorld >= TOTAL_WORLDS - 1) {
-                    showMessage(`🎉 ¡JUEGO COMPLETADO! 🎉\nMundo ${worldNum} - Nivel ${levelNum}${bonusMsg}`, 4000);
-                    gameRunning = false;
-                } else {
-                    showMessage(`🌟 ¡Mundo ${worldNum} Completado! 🌟\nPasando al Mundo ${worldNum + 1}${bonusMsg}`, 2500);
-                    setTimeout(() => {
-                        currentWorld++;
-                        currentLevelInWorld = 0;
-                        hearts = MAX_HEARTS;
-                        initLevel();
-                        gameRunning = true;
-                    }, 2500);
+            if (rectCollide(playerRect, goalRect)) {
+                levelTransitioning = true;
+                levelComplete = true;
+                
+                const levelNum = currentLevelInWorld + 1;
+                const worldNum = currentWorld + 1;
+                
+                comboCount++;
+                let bonusMsg = '';
+                if (comboCount >= 5) bonusMsg = ' 🔥 ¡Racha de 5!';
+                if (comboCount >= 10) bonusMsg = ' ⚡ ¡Racha de 10!';
+                if (comboCount >= 20) bonusMsg = ' 🌟 ¡Racha de 20!';
+                
+                // Partículas de celebración
+                for (let i = 0; i < 50; i++) {
+                    particles.push({
+                        x: goal.x + goal.w/2 + (Math.random() - 0.5) * 50,
+                        y: goal.y + goal.h/2 + (Math.random() - 0.5) * 50,
+                        vx: (Math.random() - 0.5) * 16,
+                        vy: (Math.random() - 0.5) * 16 - 6,
+                        life: 1 + Math.random() * 0.6,
+                        color: `hsl(${Math.random() * 60 + 20}, 100%, 60%)`,
+                        size: 4 + Math.random() * 8
+                    });
                 }
-            } else {
-                showMessage(`✅ ¡Nivel ${levelNum} Completado!${bonusMsg}`, 1500);
+                
+                // Determinar siguiente nivel
+                let nextWorld = currentWorld;
+                let nextLevel = currentLevelInWorld + 1;
+                
+                if (nextLevel >= LEVELS_PER_WORLD) {
+                    nextLevel = 0;
+                    nextWorld = currentWorld + 1;
+                }
+                
+                if (nextWorld >= TOTAL_WORLDS) {
+                    // JUEGO COMPLETADO
+                    showMessage(`🎉 ¡JUEGO COMPLETADO! 🎉\nMundo ${worldNum} - Nivel ${levelNum}${bonusMsg}`, 5000);
+                    gameRunning = false;
+                    updateUI();
+                    return;
+                }
+                
+                // Mostrar mensaje
+                const nextStars = levels[nextWorld * LEVELS_PER_WORLD + nextLevel]?.starRating || 1;
+                const starsStr = '⭐'.repeat(Math.min(5, nextStars));
+                
+                if (currentLevelInWorld >= LEVELS_PER_WORLD - 1) {
+                    showMessage(`🌟 ¡Mundo ${worldNum} Completado! 🌟\nPasando al Mundo ${nextWorld + 1}\n${starsStr} ${bonusMsg}`, 2500);
+                } else {
+                    showMessage(`✅ ¡Nivel ${levelNum} Completado! ${starsStr}${bonusMsg}`, 1500);
+                }
+                
+                updateUI();
+                
+                // Cambiar al siguiente nivel después del retraso
+                const delay = currentLevelInWorld >= LEVELS_PER_WORLD - 1 ? 2500 : 1500;
                 setTimeout(() => {
-                    currentLevelInWorld++;
+                    currentWorld = nextWorld;
+                    currentLevelInWorld = nextLevel;
+                    hearts = MAX_HEARTS;
+                    levelTransitioning = false;
                     initLevel();
                     gameRunning = true;
-                }, 1500);
+                }, delay);
+                
+                return;
             }
-            updateUI();
-            return;
         }
         
-        // --- Caer al vacío ---
+        // Caer al vacío
         if (player.y > H + 100) {
             playerDie();
         }
@@ -1417,7 +1292,7 @@
     //  GOLPE AL JUGADOR
     // ================================================================
     function playerHit() {
-        if (player.invincible || deathAnimation) return;
+        if (player.invincible || deathAnimation || levelTransitioning) return;
         
         hearts--;
         player.invincible = true;
@@ -1448,10 +1323,9 @@
     //  MUERTE DEL JUGADOR
     // ================================================================
     function playerDie() {
-        if (deathAnimation) return;
+        if (deathAnimation || levelTransitioning) return;
         
         deathAnimation = true;
-        deathTimer = 0;
         totalDeaths++;
         comboCount = 0;
         
@@ -1506,7 +1380,7 @@
     }
     
     // ================================================================
-    //  DIBUJO DEL JUEGO
+    //  DIBUJO
     // ================================================================
     function draw() {
         const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
@@ -1524,7 +1398,7 @@
         ctx.clearRect(0, 0, W, H);
         drawBackground(level);
         
-        // --- Dibujar plataformas ---
+        // Plataformas
         for (let i = 0; i < level.platforms.length; i++) {
             const p = level.platforms[i];
             let px = p.x, py = p.y;
@@ -1577,12 +1451,12 @@
             }
         }
         
-        // --- Dibujar púas fijas ---
+        // Púas fijas
         for (const spike of level.spikes) {
             drawSpike(spike.x, spike.y, spike.w, spike.h);
         }
         
-        // --- Dibujar trampas activas ---
+        // Trampas activas
         for (let i = 0; i < level.traps.length; i++) {
             const trap = level.traps[i];
             if (!trap.active) continue;
@@ -1591,10 +1465,10 @@
             let active = false;
             
             if (trap.pattern === 'pulse') {
-                active = Math.sin(timer * 3 * trap.speed) > 0.2;
+                active = Math.sin(timer * 3 * trap.speed) > 0.15;
             } else if (trap.pattern === 'sweep') {
                 const phase = trap.phase || 0;
-                active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.3;
+                active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.25;
             }
             
             if (trap.type === 'spike') {
@@ -1626,7 +1500,7 @@
             }
         }
         
-        // --- Dibujar meta (cuadro dorado) ---
+        // Meta
         const goal = level.goal;
         const pulse = Math.sin(frameCount * 0.06) * 0.3 + 0.7;
         ctx.shadowBlur = 30;
@@ -1651,10 +1525,10 @@
         ctx.textBaseline = 'middle';
         ctx.fillText('⭐', goal.x + goal.w/2, goal.y + goal.h/2 + 2);
         
-        // --- Dibujar jugador con brazos ---
+        // Jugador
         drawPlayer();
         
-        // --- Partículas ---
+        // Partículas
         for (const p of particles) {
             ctx.globalAlpha = Math.max(0, p.life);
             ctx.fillStyle = p.color;
@@ -1665,17 +1539,17 @@
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 0;
         
-        // --- Efectos especiales ---
+        // Efectos especiales
         if (level.darkMode) {
             ctx.fillStyle = 'rgba(0,0,0,0.35)';
             ctx.fillRect(0, 0, W, H);
-            const grad = ctx.createRadialGradient(
+            const grad2 = ctx.createRadialGradient(
                 player.x + player.w/2, player.y + player.h/2, 20,
                 player.x + player.w/2, player.y + player.h/2, 200
             );
-            grad.addColorStop(0, 'rgba(255,255,255,0)');
-            grad.addColorStop(1, 'rgba(0,0,0,0.5)');
-            ctx.fillStyle = grad;
+            grad2.addColorStop(0, 'rgba(255,255,255,0)');
+            grad2.addColorStop(1, 'rgba(0,0,0,0.5)');
+            ctx.fillStyle = grad2;
             ctx.fillRect(0, 0, W, H);
         }
         
@@ -1699,7 +1573,7 @@
     }
     
     // ================================================================
-    //  DIBUJAR JUGADOR CON BRAZOS Y PERSONALIZACIÓN
+    //  DIBUJAR JUGADOR
     // ================================================================
     function drawPlayer() {
         const p = player;
@@ -1711,7 +1585,32 @@
         ctx.shadowBlur = 20;
         ctx.shadowColor = 'rgba(79,195,247,0.3)';
         
-        // --- Cuerpo ---
+        // Extra: Efectos
+        if (customization.extra === 'glow') {
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = 'rgba(255,215,0,0.5)';
+        } else if (customization.extra === 'fire') {
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = 'rgba(255,100,0,0.5)';
+        } else if (customization.extra === 'ice') {
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = 'rgba(100,200,255,0.5)';
+        } else if (customization.extra === 'electric') {
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = 'rgba(255,255,0,0.5)';
+        } else if (customization.extra === 'rainbow') {
+            const hue = (frameCount * 2) % 360;
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
+        } else if (customization.extra === 'shadow') {
+            ctx.shadowBlur = 30;
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        } else if (customization.extra === 'star') {
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = 'rgba(255,215,0,0.6)';
+        }
+        
+        // Cuerpo
         const bodyGrad = ctx.createLinearGradient(x, y, x + w, y + h);
         bodyGrad.addColorStop(0, colors.body);
         bodyGrad.addColorStop(0.5, colors.body);
@@ -1722,14 +1621,14 @@
         roundRect(ctx, x + 2, y + 12, w - 4, h - 20, 6);
         ctx.fill();
         
-        // --- Cabeza ---
+        // Cabeza
         ctx.shadowBlur = 10;
         ctx.fillStyle = colors.skin;
         ctx.beginPath();
         ctx.arc(x + w/2, y + 10, 14, 0, Math.PI * 2);
         ctx.fill();
         
-        // --- Ojos ---
+        // Ojos
         ctx.shadowBlur = 0;
         ctx.fillStyle = '#fff';
         ctx.beginPath();
@@ -1749,34 +1648,30 @@
         ctx.arc(x + w/2 + 7 + f * 3, y + 6, 1.2, 0, Math.PI * 2);
         ctx.fill();
         
-        // --- Sonrisa ---
+        // Sonrisa
         ctx.strokeStyle = '#1a1a2e';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.arc(x + w/2, y + 12, 5, 0.1, Math.PI - 0.1);
         ctx.stroke();
         
-        // --- Brazos (ANIMADOS) ---
+        // Brazos
         ctx.shadowBlur = 5;
         ctx.shadowColor = 'rgba(0,0,0,0.2)';
         ctx.fillStyle = colors.skin;
         
         const armSwing = p.onGround ? Math.sin(p.walkFrame * Math.PI/2) * 6 : -3;
-        const armSwing2 = p.onGround ? Math.cos(p.walkFrame * Math.PI/2) * 4 : 0;
         
-        // Brazo izquierdo
         ctx.save();
         ctx.translate(x + 2, y + 16);
         ctx.rotate(-0.3 + armSwing * 0.03 + (p.armAngle * 0.02));
         ctx.fillRect(-2, 0, 5, 14);
-        // Mano
         ctx.fillStyle = colors.skin;
         ctx.beginPath();
         ctx.arc(0, 14, 3, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
         
-        // Brazo derecho
         ctx.fillStyle = colors.skin;
         ctx.save();
         ctx.translate(x + w - 2, y + 16);
@@ -1788,7 +1683,7 @@
         ctx.fill();
         ctx.restore();
         
-        // --- Piernas ---
+        // Piernas
         ctx.shadowBlur = 5;
         ctx.shadowColor = 'rgba(0,0,0,0.2)';
         ctx.fillStyle = colors.bodyDark;
@@ -1798,12 +1693,11 @@
         ctx.fillRect(x + 4, y + h - 10, 6, 10 + legOffset);
         ctx.fillRect(x + w - 10, y + h - 10, 6, 10 - legOffset);
         
-        // Zapatos
         ctx.fillStyle = colors.accent;
         ctx.fillRect(x + 2, y + h - 2 + legOffset, 10, 4);
         ctx.fillRect(x + w - 12, y + h - 2 - legOffset, 10, 4);
         
-        // --- Gorra / Sombrero ---
+        // Sombreros
         if (customization.hat !== 'none') {
             ctx.shadowBlur = 5;
             ctx.shadowColor = 'rgba(0,0,0,0.2)';
@@ -1829,10 +1723,63 @@
                     ctx.fillRect(x + w/2 + i + 1, y - 14, 2, 3);
                     ctx.fillStyle = '#fbbf24';
                 }
+            } else if (customization.hat === 'sombrero') {
+                ctx.fillStyle = '#d4a373';
+                ctx.fillRect(x + w/2 - 16, y - 2, 32, 4);
+                ctx.fillRect(x + w/2 - 8, y - 12, 16, 10);
+                ctx.fillStyle = '#f4a261';
+                ctx.fillRect(x + w/2 - 14, y - 2, 28, 2);
+            } else if (customization.hat === 'wizard') {
+                ctx.fillStyle = '#6c3a9e';
+                ctx.beginPath();
+                ctx.moveTo(x + w/2 - 12, y - 4);
+                ctx.lineTo(x + w/2, y - 28);
+                ctx.lineTo(x + w/2 + 12, y - 4);
+                ctx.fill();
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(x + w/2, y - 28, 4, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (customization.hat === 'santa') {
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(x + w/2 - 12, y - 4, 24, 8);
+                ctx.beginPath();
+                ctx.moveTo(x + w/2 - 12, y - 4);
+                ctx.lineTo(x + w/2, y - 18);
+                ctx.lineTo(x + w/2 + 12, y - 4);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(x + w/2 - 14, y - 3, 28, 3);
+                ctx.beginPath();
+                ctx.arc(x + w/2, y - 18, 4, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (customization.hat === 'ninja') {
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(x + w/2 - 14, y - 6, 28, 10);
+                ctx.fillRect(x + w/2 - 2, y - 14, 4, 8);
+                ctx.fillStyle = '#e94560';
+                ctx.fillRect(x + w/2 - 10, y - 4, 20, 2);
+            } else if (customization.hat === 'pirates') {
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(x + w/2 - 12, y - 4, 24, 6);
+                ctx.beginPath();
+                ctx.moveTo(x + w/2 - 12, y - 4);
+                ctx.lineTo(x + w/2 - 6, y - 18);
+                ctx.lineTo(x + w/2, y - 8);
+                ctx.lineTo(x + w/2 + 6, y - 18);
+                ctx.lineTo(x + w/2 + 12, y - 4);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(x + w/2 - 4, y - 18, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(x + w/2 + 4, y - 18, 3, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
         
-        // --- Accesorios ---
+        // Accesorios
         if (customization.accessory !== 'none') {
             ctx.shadowBlur = 5;
             ctx.shadowColor = 'rgba(0,0,0,0.2)';
@@ -1852,23 +1799,77 @@
                 ctx.lineTo(x + w/2 + 2, y + 7);
                 ctx.stroke();
             } else if (customization.accessory === 'cape') {
-                ctx.fillStyle = 'rgba(233,69,96,0.3)';
-                ctx.fillRect(x - 10, y + 14, 8, 20);
-                ctx.fillRect(x + w + 2, y + 14, 8, 20);
-                ctx.fillStyle = 'rgba(233,69,96,0.15)';
-                ctx.fillRect(x - 6, y + 18, 4, 16);
-                ctx.fillRect(x + w + 2, y + 18, 4, 16);
+                ctx.fillStyle = 'rgba(233,69,96,0.35)';
+                ctx.fillRect(x - 10, y + 14, 8, 22);
+                ctx.fillRect(x + w + 2, y + 14, 8, 22);
+                ctx.fillStyle = 'rgba(233,69,96,0.2)';
+                ctx.fillRect(x - 6, y + 18, 4, 18);
+                ctx.fillRect(x + w + 2, y + 18, 4, 18);
+            } else if (customization.accessory === 'backpack') {
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(x - 4, y + 16, 8, 16);
+                ctx.fillRect(x + w - 4, y + 16, 8, 16);
+                ctx.fillStyle = '#A0522D';
+                ctx.fillRect(x - 2, y + 18, 4, 4);
+                ctx.fillRect(x + w - 2, y + 18, 4, 4);
+            } else if (customization.accessory === 'wings') {
+                ctx.fillStyle = 'rgba(200,200,255,0.3)';
+                ctx.beginPath();
+                ctx.moveTo(x - 10, y + 12);
+                ctx.quadraticCurveTo(x - 30, y - 10, x - 8, y - 6);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(x + w + 10, y + 12);
+                ctx.quadraticCurveTo(x + w + 30, y - 10, x + w + 8, y - 6);
+                ctx.fill();
+                ctx.fillStyle = 'rgba(200,200,255,0.2)';
+                ctx.beginPath();
+                ctx.moveTo(x - 6, y + 16);
+                ctx.quadraticCurveTo(x - 20, y + 4, x - 4, y + 6);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(x + w + 6, y + 16);
+                ctx.quadraticCurveTo(x + w + 20, y + 4, x + w + 4, y + 6);
+                ctx.fill();
+            } else if (customization.accessory === 'shield') {
+                ctx.fillStyle = 'rgba(100,150,255,0.4)';
+                ctx.beginPath();
+                ctx.arc(x - 6, y + 20, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(100,150,255,0.6)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(x - 6, y + 20, 10, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                ctx.beginPath();
+                ctx.arc(x - 8, y + 18, 4, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (customization.accessory === 'sword') {
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(x - 16, y + 8, 3, 20);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x - 18, y + 28, 7, 4);
+                ctx.fillRect(x - 20, y + 24, 11, 2);
+            } else if (customization.accessory === 'bow') {
+                ctx.fillStyle = '#8B6914';
+                ctx.fillRect(x - 14, y + 12, 2, 18);
+                ctx.fillRect(x + 12, y + 12, 2, 18);
+                ctx.fillStyle = '#d4a373';
+                ctx.fillRect(x - 12, y + 18, 24, 2);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(x + 6, y + 14, 8, 2);
             }
         }
         
-        // --- Cabello ---
+        // Cabello
         ctx.shadowBlur = 0;
         ctx.fillStyle = '#2d1b0e';
         ctx.beginPath();
         ctx.arc(x + w/2, y + 2, 15, Math.PI, 2 * Math.PI);
         ctx.fill();
         
-        // --- Brillo ---
+        // Brillo
         ctx.fillStyle = 'rgba(255,255,255,0.05)';
         ctx.fillRect(x + 4, y + 14, 6, 8);
         
@@ -1876,7 +1877,7 @@
     }
     
     // ================================================================
-    //  FUNCIÓN ROUNDRECT
+    //  FUNCIONES AUXILIARES
     // ================================================================
     function roundRect(ctx, x, y, w, h, r) {
         ctx.beginPath();
@@ -1892,9 +1893,6 @@
         ctx.closePath();
     }
     
-    // ================================================================
-    //  DIBUJAR PÚA
-    // ================================================================
     function drawSpike(x, y, w, h) {
         ctx.shadowBlur = 20;
         ctx.shadowColor = 'rgba(255,0,0,0.5)';
@@ -1928,6 +1926,16 @@
         }
         ctx.closePath();
         ctx.stroke();
+    }
+    
+    function darkenColor(color, amount) {
+        let r = parseInt(color.slice(1,3), 16);
+        let g = parseInt(color.slice(3,5), 16);
+        let b = parseInt(color.slice(5,7), 16);
+        r = Math.floor(r * (1 - amount));
+        g = Math.floor(g * (1 - amount));
+        b = Math.floor(b * (1 - amount));
+        return `rgb(${r},${g},${b})`;
     }
     
     // ================================================================
@@ -2058,19 +2066,6 @@
     }
     
     // ================================================================
-    //  DARKEN COLOR
-    // ================================================================
-    function darkenColor(color, amount) {
-        let r = parseInt(color.slice(1,3), 16);
-        let g = parseInt(color.slice(3,5), 16);
-        let b = parseInt(color.slice(5,7), 16);
-        r = Math.floor(r * (1 - amount));
-        g = Math.floor(g * (1 - amount));
-        b = Math.floor(b * (1 - amount));
-        return `rgb(${r},${g},${b})`;
-    }
-    
-    // ================================================================
     //  CONTROLES
     // ================================================================
     document.addEventListener('keydown', (e) => {
@@ -2090,7 +2085,6 @@
         keys[e.code] = false;
     });
     
-    // --- Controles móviles ---
     function setupMobileControls() {
         const btnLeft = document.getElementById('btnLeft');
         const btnRight = document.getElementById('btnRight');
@@ -2114,32 +2108,36 @@
     // ================================================================
     //  MENÚ
     // ================================================================
-    // Selección de mundo
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const panelId = 'panel-' + tab.dataset.tab;
+            document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+        });
+    });
+    
     document.querySelectorAll('.world-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.world-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
-            btn.style.borderColor = '#e94560';
+            document.querySelectorAll('.world-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
             selectedWorld = parseInt(btn.dataset.world);
         });
     });
-    document.querySelector('.world-btn').style.borderColor = '#e94560';
     
-    // Personalización
-    document.querySelectorAll('.custom-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const custom = btn.dataset.custom;
-            const value = btn.dataset.value;
-            
-            document.querySelectorAll(`.custom-btn[data-custom="${custom}"]`).forEach(b => {
-                b.classList.remove('active');
+    document.querySelectorAll('.custom-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const custom = item.dataset.custom;
+            const value = item.dataset.value;
+            document.querySelectorAll(`.custom-item[data-custom="${custom}"]`).forEach(el => {
+                el.classList.remove('active');
             });
-            btn.classList.add('active');
-            
+            item.classList.add('active');
             customization[custom] = value;
         });
     });
     
-    // Iniciar juego
     menuStartBtn.addEventListener('click', () => {
         currentWorld = selectedWorld;
         currentLevelInWorld = 0;
@@ -2147,10 +2145,10 @@
         totalDeaths = 0;
         showMenu = false;
         menuOverlay.classList.add('hidden');
+        levelTransitioning = false;
         initLevel();
     });
     
-    // Botón menú durante el juego
     menuBtn.addEventListener('click', () => {
         showMenu = true;
         menuOverlay.classList.remove('hidden');
@@ -2168,6 +2166,7 @@
             currentWorld--;
             currentLevelInWorld = 0;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`🌍 Mundo ${currentWorld + 1}`, 1000);
         }
@@ -2178,6 +2177,7 @@
             currentWorld++;
             currentLevelInWorld = 0;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`🌍 Mundo ${currentWorld + 1}`, 1000);
         }
@@ -2187,12 +2187,14 @@
         if (currentLevelInWorld > 0) {
             currentLevelInWorld--;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`⬅️ Nivel ${currentLevelInWorld + 1}`, 1000);
         } else if (currentWorld > 0) {
             currentWorld--;
             currentLevelInWorld = LEVELS_PER_WORLD - 1;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`🌍 Mundo ${currentWorld + 1} - Nivel ${LEVELS_PER_WORLD}`, 1000);
         }
@@ -2202,12 +2204,14 @@
         if (currentLevelInWorld < LEVELS_PER_WORLD - 1) {
             currentLevelInWorld++;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`➡️ Nivel ${currentLevelInWorld + 1}`, 1000);
         } else if (currentWorld < TOTAL_WORLDS - 1) {
             currentWorld++;
             currentLevelInWorld = 0;
             hearts = MAX_HEARTS;
+            levelTransitioning = false;
             initLevel();
             showMessage(`🌍 Mundo ${currentWorld + 1} - Nivel 1`, 1000);
         }
@@ -2221,6 +2225,7 @@
         particles = [];
         gameRunning = true;
         deathAnimation = false;
+        levelTransitioning = false;
         initLevel();
         showMessage('🔄 Nivel Reiniciado', 800);
     }
@@ -2233,6 +2238,7 @@
         particles = [];
         gameRunning = true;
         deathAnimation = false;
+        levelTransitioning = false;
         comboCount = 0;
         showMenu = true;
         menuOverlay.classList.remove('hidden');
@@ -2250,9 +2256,6 @@
         resizeCanvas();
     }
     
-    // ================================================================
-    //  RESIZE
-    // ================================================================
     function resizeCanvas() {
         const container = document.getElementById('gameContainer');
         const maxWidth = window.innerWidth - 20;
@@ -2290,17 +2293,13 @@
         requestAnimationFrame(gameLoop);
     }
     
-    // ================================================================
-    //  INICIAR
-    // ================================================================
     init();
     
-    console.log('🌟 DEVIL\'S ASCENT - EDICIÓN DEFINITIVA');
-    console.log(`📊 ${TOTAL_WORLDS} Mundos × ${LEVELS_PER_WORLD} Niveles = ${TOTAL_LEVELS} Niveles`);
-    console.log('🎨 Personalización: Colores, sombreros y accesorios');
-    console.log('🦾 Personaje con brazos animados');
-    console.log('⚠️ Todas las trampas: púas fijas, pulsantes, láseres, plataformas móviles y que caen');
-    console.log('🏆 Paso automático al tocar la meta dorada');
+    console.log('⚡ DEVIL\'S ASCENT - EDICIÓN EXTREMA (CORREGIDA)');
+    console.log(`📊 ${TOTAL_WORLDS} Mundos × ${LEVELS_PER_WORLD} Niveles = ${TOTAL_WORLDS * LEVELS_PER_WORLD} Niveles`);
+    console.log('⭐ Dificultad progresiva nivel por nivel');
+    console.log('⚠️ Más trampas en cada nivel');
+    console.log('🏆 PASO DE NIVEL 100% FUNCIONANDO');
     console.log('📱 Compatible PC y Móvil');
     
     // ================================================================

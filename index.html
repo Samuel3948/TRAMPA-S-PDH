@@ -1,2448 +1,5506 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ DEVIL'S ASCENT - Edición Definitiva</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        
-        body {
-            background: #0a0a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            touch-action: none;
-        }
-        
-        #gameWrapper {
-            background: linear-gradient(145deg, #1a1a3e, #0a0a1a);
-            border-radius: 25px;
-            padding: 15px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05);
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            max-width: 98vw;
-            position: relative;
-        }
-        
-        #gameContainer {
-            position: relative;
-            background: #0f1a2e;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        
-        canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            background: #0f1a2e;
-            touch-action: none;
-            cursor: pointer;
-        }
-        
-        /* ===== MENÚ DE INICIO ===== */
-        #menuOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.92);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        #menuOverlay.hidden { display: none; }
-        
-        #menuTitle {
-            font-size: 38px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 40px rgba(233,69,96,0.6), 0 4px 20px rgba(0,0,0,0.8);
-            margin-bottom: 3px;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        
-        #menuSubtitle {
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-            margin-bottom: 15px;
-            text-align: center;
-            letter-spacing: 3px;
-        }
-        
-        .menu-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .menu-tab {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 8px 18px;
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            touch-action: manipulation;
-        }
-        
-        .menu-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .menu-tab.active { background: rgba(233,69,96,0.2); border-color: #e94560; color: #fff; }
-        
-        .menu-panel {
-            display: none;
-            width: 100%;
-            max-width: 600px;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-            max-height: 160px;
-            overflow-y: auto;
-        }
-        
-        .menu-panel.active { display: flex; }
-        
-        .menu-panel::-webkit-scrollbar { width: 4px; }
-        .menu-panel::-webkit-scrollbar-thumb { background: #e94560; border-radius: 10px; }
-        
-        .custom-item {
-            background: rgba(255,255,255,0.06);
-            border: 2px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 5px 10px;
-            color: #fff;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            touch-action: manipulation;
-            text-align: center;
-            min-width: 45px;
-        }
-        
-        .custom-item:hover { background: rgba(255,255,255,0.12); }
-        .custom-item.active { border-color: #e94560; background: rgba(233,69,96,0.25); box-shadow: 0 0 20px rgba(233,69,96,0.2); }
-        .custom-item .emoji { font-size: 18px; display: block; }
-        .custom-item .label { font-size: 9px; opacity: 0.7; }
-        
-        #menuWorldSelect {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            max-width: 600px;
-            margin-bottom: 10px;
-        }
-        
-        .world-btn {
-            background: linear-gradient(145deg, #1a1a3e, #2a2a5e);
-            border: 2px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 10px 18px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 80px;
-            text-align: center;
-            font-family: inherit;
-            touch-action: manipulation;
-        }
-        
-        .world-btn:hover { transform: scale(1.05); border-color: rgba(233,69,96,0.4); }
-        .world-btn:active { transform: scale(0.95); }
-        .world-btn .emoji { font-size: 24px; display: block; margin-bottom: 3px; }
-        .world-btn .name { font-size: 12px; }
-        .world-btn .levels-info { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
-        .world-btn.selected { border-color: #e94560; background: linear-gradient(145deg, #2a2a5e, #3a3a7e); box-shadow: 0 0 30px rgba(233,69,96,0.2); }
-        
-        #menuStartBtn {
-            background: linear-gradient(145deg, #e94560, #c23152);
-            border: none;
-            border-radius: 16px;
-            padding: 14px 45px;
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            touch-action: manipulation;
-            box-shadow: 0 8px 30px rgba(233,69,96,0.4);
-            margin-top: 8px;
-        }
-        
-        #menuStartBtn:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(233,69,96,0.6); }
-        #menuStartBtn:active { transform: scale(0.95); }
-        
-        /* ===== UI DEL JUEGO ===== */
-        #topUI {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 14px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 12px 12px 0 0;
-            border-bottom: 2px solid rgba(233,69,96,0.3);
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        
-        #topUI > div {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #eee;
-            font-size: 12px;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .ui-icon { font-size: 14px; }
-        .ui-value { background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); min-width: 20px; text-align: center; }
-        .health-hearts { color: #ff4757; font-size: 14px; letter-spacing: 1px; }
-        .world-badge { background: linear-gradient(135deg, #e94560, #c23152); padding: 2px 10px; border-radius: 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .difficulty-badge { background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 20px; font-size: 10px; border: 1px solid rgba(255,255,255,0.1); }
-        
-        #bottomUI {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            padding: 6px 10px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 0 0 12px 12px;
-            border-top: 2px solid rgba(233,69,96,0.3);
-            flex-wrap: wrap;
-        }
-        
-        #bottomUI button {
-            background: linear-gradient(145deg, #2a2a5e, #1a1a3e);
-            color: #fff;
-            border: 1px solid rgba(233,69,96,0.3);
-            padding: 5px 12px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            touch-action: manipulation;
-            min-height: 34px;
-            min-width: 34px;
-        }
-        
-        #bottomUI button:hover { background: linear-gradient(145deg, #3a3a7e, #2a2a5e); transform: scale(1.05); border-color: #e94560; }
-        #bottomUI button:active { transform: scale(0.95); }
-        .btn-primary { background: linear-gradient(145deg, #e94560, #c23152) !important; border-color: #e94560 !important; }
-        .btn-primary:hover { background: linear-gradient(145deg, #ff6b81, #e94560) !important; }
-        
-        #mobileControls {
-            display: none;
-            justify-content: space-between;
-            padding: 6px 10px 3px 10px;
-            gap: 6px;
-        }
-        
-        .mobile-btn {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 20px;
-            padding: 8px 14px;
-            min-width: 46px;
-            min-height: 46px;
-            text-align: center;
-            touch-action: manipulation;
-            cursor: pointer;
-            transition: all 0.1s;
-            backdrop-filter: blur(5px);
-            font-weight: bold;
-        }
-        
-        .mobile-btn:active { background: rgba(233,69,96,0.4); transform: scale(0.92); border-color: #e94560; }
-        .mobile-btn.jump-btn { background: rgba(233,69,96,0.3); border-color: rgba(233,69,96,0.5); min-width: 60px; font-size: 16px; }
-        .mobile-btn.jump-btn:active { background: rgba(233,69,96,0.6); }
-        .mobile-dpad { display: flex; gap: 5px; }
-        
-        #messageOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            z-index: 20;
-        }
-        
-        #messageText {
-            color: #fff;
-            font-size: 26px;
-            font-weight: bold;
-            text-shadow: 0 0 40px rgba(233,69,96,0.8), 0 4px 20px rgba(0,0,0,0.8);
-            text-align: center;
-            padding: 14px 20px;
-            opacity: 0;
-            transition: opacity 0.4s;
-            background: rgba(0,0,0,0.6);
-            border-radius: 16px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.1);
-            max-width: 90%;
-        }
-        
-        #messageText.show { opacity: 1; }
-        .key-hint { color: rgba(255,255,255,0.2); font-size: 9px; text-align: center; padding: 3px 0 1px 0; letter-spacing: 1px; }
-        
-        @media (max-width: 768px) {
-            #gameWrapper { padding: 6px; border-radius: 12px; }
-            #topUI { padding: 4px 8px; font-size: 10px; }
-            #topUI > div { font-size: 10px; gap: 3px; }
-            .health-hearts { font-size: 12px; }
-            .world-badge { font-size: 8px; padding: 2px 6px; }
-            #bottomUI { padding: 4px 6px; gap: 3px; }
-            #bottomUI button { padding: 4px 8px; font-size: 9px; min-height: 28px; min-width: 28px; }
-            #mobileControls { display: flex !important; }
-            .key-hint { display: none; }
-            #menuTitle { font-size: 24px; }
-            #menuSubtitle { font-size: 11px; }
-            .world-btn { padding: 6px 12px; font-size: 11px; min-width: 60px; }
-            .world-btn .emoji { font-size: 18px; }
-            #menuStartBtn { padding: 10px 25px; font-size: 16px; }
-            .menu-tab { padding: 5px 12px; font-size: 11px; }
-            .custom-item { padding: 4px 8px; font-size: 10px; min-width: 40px; }
-            .custom-item .emoji { font-size: 16px; }
-            .menu-panel { max-height: 140px; gap: 4px; padding: 6px; }
-            #messageText { font-size: 18px; padding: 10px 14px; }
-        }
-        
-        @media (pointer: coarse) { #mobileControls { display: flex !important; } .key-hint { display: none; } }
-        @media (max-width: 480px) {
-            #topUI > div { font-size: 8px; }
-            .health-hearts { font-size: 10px; }
-            .mobile-btn { font-size: 16px; padding: 5px 10px; min-width: 36px; min-height: 36px; }
-            .mobile-btn.jump-btn { min-width: 48px; font-size: 12px; }
-            #menuTitle { font-size: 20px; }
-            .world-btn { padding: 4px 8px; font-size: 10px; min-width: 50px; }
-            .world-btn .emoji { font-size: 14px; }
-            #menuStartBtn { padding: 8px 18px; font-size: 14px; }
-            #messageText { font-size: 14px; padding: 8px 12px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               user-scalable=no,
+               viewport-fit=cover">
+
+<title>LEGENDS ADVENTURE</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#071018;
+    font-family:Arial,Helvetica,sans-serif;
+    touch-action:none;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+/* =========================
+   MENÚ
+========================= */
+
+.screen{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 20%,#244e6b,#09121d 65%);
+    color:white;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.menuBox{
+    width:min(900px,94vw);
+    max-height:92vh;
+    overflow:auto;
+    padding:30px;
+    text-align:center;
+    border-radius:25px;
+    background:rgba(5,12,20,.94);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 30px 100px rgba(0,0,0,.7);
+}
+
+.logo{
+    font-size:clamp(42px,8vw,80px);
+    font-weight:1000;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#ffd447;
+}
+
+.subtitle{
+    color:#aebdca;
+    margin:8px 0 30px;
+}
+
+.buttons{
+    width:min(380px,90%);
+    margin:auto;
+    display:grid;
+    gap:13px;
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+}
+
+.mainButton{
+    padding:16px;
+    border-radius:14px;
+    font-size:18px;
+    font-weight:900;
+    color:#111;
+    background:#ffd447;
+    box-shadow:0 5px 0 #987400;
+}
+
+.mainButton:active{
+    transform:translateY(4px);
+    box-shadow:0 1px 0 #987400;
+}
+
+.secondary{
+    background:#e8eef3;
+    box-shadow:0 5px 0 #8996a1;
+}
+
+/* =========================
+   MENÚ PERSONAJES
+========================= */
+
+.panel{
+    width:min(950px,94vw);
+    max-height:92vh;
+    overflow:auto;
+    padding:25px;
+    border-radius:24px;
+    background:rgba(5,12,20,.96);
+    color:white;
+}
+
+.panel h2{
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(130px,1fr));
+    gap:12px;
+    margin:20px 0;
+}
+
+.card{
+    padding:14px;
+    border-radius:15px;
+    background:#172738;
+    border:2px solid transparent;
+    color:white;
+    text-align:center;
+}
+
+.card.selected{
+    border-color:#ffd447;
+}
+
+.card.locked{
+    opacity:.45;
+}
+
+.avatar{
+    font-size:55px;
+    height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.card h3{
+    margin:5px 0;
+}
+
+.card small{
+    color:#aebdca;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+    position:fixed;
+    z-index:30;
+    top:max(8px,env(safe-area-inset-top));
+    left:10px;
+    right:10px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    pointer-events:none;
+}
+
+.stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.stat{
+    background:rgba(0,0,0,.68);
+    color:white;
+    border:1px solid rgba(255,255,255,.18);
+    padding:7px 10px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+#pauseButton{
+    pointer-events:auto;
+    background:rgba(0,0,0,.7);
+    color:white;
+    border:1px solid #ffffff33;
+    border-radius:10px;
+    padding:8px 13px;
+    font-size:18px;
+}
+
+/* =========================
+   CONTROLES CELULAR
+========================= */
+
+#mobileControls{
+    position:fixed;
+    z-index:40;
+    left:12px;
+    right:12px;
+    bottom:max(10px,env(safe-area-inset-bottom));
+
+    display:flex;
+    justify-content:space-between;
+
+    pointer-events:none;
+}
+
+.controlSide{
+    display:flex;
+    gap:10px;
+}
+
+.control{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+    background:rgba(5,15,25,.75);
+    border:2px solid rgba(255,255,255,.35);
+
+    font-size:26px;
+    font-weight:900;
+
+    pointer-events:auto;
+    user-select:none;
+}
+
+.control:active{
+    transform:scale(.9);
+    background:rgba(255,255,255,.2);
+}
+
+/* =========================
+   ROTACIÓN
+========================= */
+
+#rotateMessage{
+    z-index:200;
+    text-align:center;
+}
+
+.phone{
+    font-size:70px;
+    margin-bottom:20px;
+    animation:rotatePhone 1.5s infinite alternate;
+}
+
+@keyframes rotatePhone{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(90deg)}
+}
+
+@media (orientation:portrait) and (max-width:900px){
+    #rotateMessage{
+        display:flex!important;
+    }
+
+    #gameScreen,
+    #hud,
+    #mobileControls{
+        display:none!important;
+    }
+}
+
+@media (orientation:landscape){
+    #rotateMessage{
+        display:none!important;
+    }
+}
+
+/* =========================
+   NIVELES
+========================= */
+
+.levelGrid{
+    display:grid;
+    grid-template-columns:
+        repeat(5,1fr);
+    gap:10px;
+    margin:20px 0;
+}
+
+.levelButton{
+    padding:15px 5px;
+    border-radius:10px;
+    color:white;
+    background:#263b50;
+    font-weight:bold;
+}
+
+.levelButton.open{
+    background:#237ac2;
+}
+
+.levelButton.complete{
+    background:#24934d;
+}
+
+.levelButton.locked{
+    opacity:.3;
+}
+
+/* =========================
+   PAUSA
+========================= */
+
+#pauseScreen{
+    background:rgba(0,0,0,.7);
+}
+
+.pauseBox{
+    text-align:center;
+    color:white;
+}
+
+.pauseBox h1{
+    font-size:60px;
+    margin-bottom:20px;
+}
+
+/* =========================
+   EDITOR DE PERSONAJE
+========================= */
+
+.editorSection{
+    margin:15px 0;
+    padding:15px;
+    background:#172738;
+    border-radius:15px;
+}
+
+.editorSection h3{
+    margin-bottom:10px;
+    color:#ffd447;
+}
+
+.editorOptions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+}
+
+.editorOption{
+    padding:8px 12px;
+    border-radius:8px;
+    background:#263b50;
+    color:white;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition:all .2s;
+}
+
+.editorOption.selected{
+    border-color:#ffd447;
+    background:#3a5a75;
+}
+
+.editorOption:hover{
+    background:#3a5a75;
+}
+
+.colorOption{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    cursor:pointer;
+    border:3px solid transparent;
+}
+
+.colorOption.selected{
+    border-color:#ffd447;
+    transform:scale(1.2);
+}
+
+.previewBox{
+    width:120px;
+    height:150px;
+    margin:20px auto;
+    position:relative;
+}
+</style>
 </head>
+
 <body>
 
-<div id="gameWrapper">
-    <div id="gameContainer">
-        <!-- ===== MENÚ DE INICIO ===== -->
-        <div id="menuOverlay">
-            <div id="menuTitle">⚡ DEVIL'S ASCENT</div>
-            <div id="menuSubtitle">— EDICIÓN DEFINITIVA —</div>
-            
-            <div id="menuWorldSelect">
-                <button class="world-btn selected" data-world="0"><span class="emoji">🌲</span><span class="name">Bosque</span><span class="levels-info">50 niveles</span></button>
-                <button class="world-btn" data-world="1"><span class="emoji">🏜️</span><span class="name">Desierto</span><span class="levels-info">50 niveles</span></button>
-                <button class="world-btn" data-world="2"><span class="emoji">❄️</span><span class="name">Tundra</span><span class="levels-info">50 niveles</span></button>
-                <button class="world-btn" data-world="3"><span class="emoji">🌋</span><span class="name">Volcán</span><span class="levels-info">50 niveles</span></button>
-                <button class="world-btn" data-world="4"><span class="emoji">🌌</span><span class="name">Espacio</span><span class="levels-info">50 niveles</span></button>
-            </div>
-            
-            <div class="menu-tabs">
-                <button class="menu-tab active" data-tab="colors">🎨 Colores</button>
-                <button class="menu-tab" data-tab="hats">🎩 Sombreros</button>
-                <button class="menu-tab" data-tab="accessories">✨ Accesorios</button>
-                <button class="menu-tab" data-tab="extras">⭐ Extras</button>
-            </div>
-            
-            <div class="menu-panel active" id="panel-colors">
-                <button class="custom-item active" data-custom="color" data-value="blue"><span class="emoji">🔵</span><span class="label">Azul</span></button>
-                <button class="custom-item" data-custom="color" data-value="red"><span class="emoji">🔴</span><span class="label">Rojo</span></button>
-                <button class="custom-item" data-custom="color" data-value="green"><span class="emoji">🟢</span><span class="label">Verde</span></button>
-                <button class="custom-item" data-custom="color" data-value="purple"><span class="emoji">🟣</span><span class="label">Púrpura</span></button>
-                <button class="custom-item" data-custom="color" data-value="gold"><span class="emoji">🟡</span><span class="label">Dorado</span></button>
-                <button class="custom-item" data-custom="color" data-value="pink"><span class="emoji">🩷</span><span class="label">Rosa</span></button>
-                <button class="custom-item" data-custom="color" data-value="cyan"><span class="emoji">🩵</span><span class="label">Cian</span></button>
-                <button class="custom-item" data-custom="color" data-value="orange"><span class="emoji">🟠</span><span class="label">Naranja</span></button>
-            </div>
-            
-            <div class="menu-panel" id="panel-hats">
-                <button class="custom-item active" data-custom="hat" data-value="none"><span class="emoji">👤</span><span class="label">Sin</span></button>
-                <button class="custom-item" data-custom="hat" data-value="cap"><span class="emoji">🧢</span><span class="label">Gorra</span></button>
-                <button class="custom-item" data-custom="hat" data-value="tophat"><span class="emoji">🎩</span><span class="label">Chistera</span></button>
-                <button class="custom-item" data-custom="hat" data-value="crown"><span class="emoji">👑</span><span class="label">Corona</span></button>
-                <button class="custom-item" data-custom="hat" data-value="sombrero"><span class="emoji">🤠</span><span class="label">Sombrero</span></button>
-                <button class="custom-item" data-custom="hat" data-value="wizard"><span class="emoji">🧙</span><span class="label">Mago</span></button>
-                <button class="custom-item" data-custom="hat" data-value="santa"><span class="emoji">🎅</span><span class="label">Navidad</span></button>
-                <button class="custom-item" data-custom="hat" data-value="ninja"><span class="emoji">🥷</span><span class="label">Ninja</span></button>
-                <button class="custom-item" data-custom="hat" data-value="pirates"><span class="emoji">🏴‍☠️</span><span class="label">Pirata</span></button>
-            </div>
-            
-            <div class="menu-panel" id="panel-accessories">
-                <button class="custom-item active" data-custom="accessory" data-value="none"><span class="emoji">❌</span><span class="label">Sin</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="scarf"><span class="emoji">🧣</span><span class="label">Bufanda</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="glasses"><span class="emoji">🕶️</span><span class="label">Gafas</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="cape"><span class="emoji">🧥</span><span class="label">Capa</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="backpack"><span class="emoji">🎒</span><span class="label">Mochila</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="wings"><span class="emoji">🦋</span><span class="label">Alas</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="shield"><span class="emoji">🛡️</span><span class="label">Escudo</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="sword"><span class="emoji">⚔️</span><span class="label">Espada</span></button>
-                <button class="custom-item" data-custom="accessory" data-value="bow"><span class="emoji">🏹</span><span class="label">Arco</span></button>
-            </div>
-            
-            <div class="menu-panel" id="panel-extras">
-                <button class="custom-item active" data-custom="extra" data-value="none"><span class="emoji">❌</span><span class="label">Sin</span></button>
-                <button class="custom-item" data-custom="extra" data-value="glow"><span class="emoji">✨</span><span class="label">Brillo</span></button>
-                <button class="custom-item" data-custom="extra" data-value="fire"><span class="emoji">🔥</span><span class="label">Fuego</span></button>
-                <button class="custom-item" data-custom="extra" data-value="ice"><span class="emoji">❄️</span><span class="label">Hielo</span></button>
-                <button class="custom-item" data-custom="extra" data-value="electric"><span class="emoji">⚡</span><span class="label">Eléctrico</span></button>
-                <button class="custom-item" data-custom="extra" data-value="rainbow"><span class="emoji">🌈</span><span class="label">Arcoíris</span></button>
-                <button class="custom-item" data-custom="extra" data-value="shadow"><span class="emoji">🌑</span><span class="label">Sombra</span></button>
-                <button class="custom-item" data-custom="extra" data-value="star"><span class="emoji">⭐</span><span class="label">Estrella</span></button>
-            </div>
-            
-            <button id="menuStartBtn">🎮 JUGAR</button>
-        </div>
-        
-        <!-- ===== UI DEL JUEGO ===== -->
-        <div id="topUI">
-            <div>
-                <span class="ui-icon">🌍</span>
-                <span class="world-badge" id="worldDisplay">Mundo 1</span>
-                <span class="ui-icon">🏆</span>
-                <span class="ui-value" id="levelDisplay">1</span>
-                <span style="color:rgba(255,255,255,0.3);">/</span>
-                <span style="color:rgba(255,255,255,0.5);" id="maxLevelDisplay">50</span>
-                <span class="difficulty-badge" id="difficultyDisplay">⭐</span>
-            </div>
-            <div>
-                <span class="ui-icon">❤️</span>
-                <span class="health-hearts" id="heartsDisplay">❤️❤️❤️</span>
-            </div>
-            <div>
-                <span class="ui-icon">⏱️</span>
-                <span class="ui-value" id="timerDisplay">0</span>
-                <span style="color:rgba(255,255,255,0.3);">s</span>
-            </div>
-            <div>
-                <span class="ui-icon">💀</span>
-                <span class="ui-value" id="deathsDisplay">0</span>
-            </div>
-            <div>
-                <button id="menuBtn" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:3px 10px;color:#fff;cursor:pointer;font-size:16px;">☰</button>
-            </div>
-        </div>
-        
-        <canvas id="gameCanvas" width="1200" height="550"></canvas>
-        
-        <div id="messageOverlay">
-            <div id="messageText"></div>
-        </div>
-        
-        <div id="mobileControls">
-            <div class="mobile-dpad">
-                <div class="mobile-btn" id="btnLeft">◀</div>
-                <div class="mobile-btn" id="btnRight">▶</div>
-            </div>
-            <div class="mobile-btn jump-btn" id="btnJump">▲<br><span style="font-size:8px;">SALTAR</span></div>
-        </div>
-        
-        <div id="bottomUI">
-            <button id="restartBtn">🔄 Reiniciar</button>
-            <button id="prevWorldBtn">◀ Mundo</button>
-            <button id="nextWorldBtn">Mundo ▶</button>
-            <button id="prevLevelBtn">◀ Nivel</button>
-            <button id="nextLevelBtn">Nivel ▶</button>
-            <button id="resetGameBtn" class="btn-primary">✨ Nuevo Juego</button>
-        </div>
-        
-        <div class="key-hint">PC: ← → Moverse | ↑ Saltar | R Reiniciar | Móvil: Botones táctiles</div>
+<!-- =========================
+     CANVAS
+========================= -->
+
+<canvas id="game"></canvas>
+
+
+<!-- =========================
+     MENSAJE ROTACIÓN
+========================= -->
+
+<div id="rotateMessage"
+     class="screen hidden">
+
+    <div>
+        <div class="phone">📱</div>
+
+        <h2>Gira tu celular</h2>
+
+        <p style="color:#aebdca;margin-top:10px">
+            LEGENDS ADVENTURE está diseñado
+            para jugarse horizontalmente.
+        </p>
     </div>
+
 </div>
 
+
+<!-- =========================
+     HUD
+========================= -->
+
+<div id="hud" class="hidden">
+
+    <div class="stats">
+
+        <div class="stat">
+            🌎 Mundo <span id="hudWorld">1</span>
+        </div>
+
+        <div class="stat">
+            🏁 Nivel <span id="hudLevel">1</span>/5
+        </div>
+
+        <div class="stat">
+            ❤️ <span id="hudLives">3</span>
+        </div>
+
+        <div class="stat">
+            🪙 <span id="hudCoins">0</span>
+        </div>
+
+        <div class="stat">
+            ⭐ <span id="hudScore">0</span>
+        </div>
+
+    </div>
+
+    <button id="pauseButton">Ⅱ</button>
+
+</div>
+
+
+<!-- =========================
+     CONTROLES
+========================= -->
+
+<div id="mobileControls" class="hidden">
+
+    <div class="controlSide">
+
+        <div class="control" id="leftButton">
+            ◀
+        </div>
+
+        <div class="control" id="rightButton">
+            ▶
+        </div>
+
+    </div>
+
+    <div class="controlSide">
+
+        <div class="control" id="shootButton">
+            🔥
+        </div>
+
+        <div class="control" id="jumpButton">
+            ▲
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MENÚ PRINCIPAL
+========================= -->
+
+<div id="mainMenu" class="screen">
+
+    <div class="menuBox">
+
+        <div class="logo">
+            LEGENDS
+            <span>ADVENTURE</span>
+        </div>
+
+        <div class="subtitle">
+            Una aventura original de plataformas
+        </div>
+
+        <div class="buttons">
+
+            <button
+                class="mainButton"
+                id="playButton">
+                ▶ JUGAR
+            </button>
+
+            <button
+                class="mainButton secondary"
+                id="levelsButton">
+                🗺️ NIVELES
+            </button>
+
+            <button
+                class="mainButton secondary"
+                id="charactersButton">
+                🦸 PERSONAJES
+            </button>
+
+            <button
+                class="mainButton secondary"
+                id="outfitsButton">
+                👕 TRAJES
+            </button>
+
+            <button
+                class="mainButton secondary"
+                id="editorButton">
+                ✏️ EDITOR
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     NIVELES
+========================= -->
+
+<div id="levelsMenu"
+     class="screen hidden">
+
+    <div class="panel">
+
+        <h2>🗺️ SELECCIONAR NIVEL</h2>
+
+        <p style="text-align:center;color:#aebdca">
+            Los niveles se desbloquean al completar
+            los anteriores.
+        </p>
+
+        <div
+            id="levelGrid"
+            class="levelGrid">
+        </div>
+
+        <button
+            class="mainButton secondary"
+            id="levelsBack">
+            ← VOLVER
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PERSONAJES
+========================= -->
+
+<div id="charactersMenu"
+     class="screen hidden">
+
+    <div class="panel">
+
+        <h2>🦸 PERSONAJES</h2>
+
+        <div
+            id="characterGrid"
+            class="cards">
+        </div>
+
+        <button
+            class="mainButton secondary"
+            id="charactersBack">
+            ← VOLVER
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TRAJES
+========================= -->
+
+<div id="outfitsMenu"
+     class="screen hidden">
+
+    <div class="panel">
+
+        <h2>👕 TRAJES</h2>
+
+        <div
+            id="outfitGrid"
+            class="cards">
+        </div>
+
+        <button
+            class="mainButton secondary"
+            id="outfitsBack">
+            ← VOLVER
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     EDITOR DE PERSONAJE
+========================= -->
+
+<div id="editorMenu"
+     class="screen hidden">
+
+    <div class="panel">
+
+        <h2>✏️ EDITOR DE PERSONAJE</h2>
+
+        <div class="previewBox" id="editorPreview">
+            <!-- Canvas de preview -->
+        </div>
+
+        <div class="editorSection">
+            <h3>🎨 COLOR PRINCIPAL</h3>
+            <div class="editorOptions" id="colorOptions">
+                <!-- Colores dinámicos -->
+            </div>
+        </div>
+
+        <div class="editorSection">
+            <h3>👤 CABEZA</h3>
+            <div class="editorOptions" id="headOptions">
+                <!-- Opciones de cabeza -->
+            </div>
+        </div>
+
+        <div class="editorSection">
+            <h3>💇 CABELLO</h3>
+            <div class="editorOptions" id="hairOptions">
+                <!-- Opciones de cabello -->
+            </div>
+        </div>
+
+        <div class="editorSection">
+            <h3>🦸 CAPA</h3>
+            <div class="editorOptions" id="capeOptions">
+                <!-- Opciones de capa -->
+            </div>
+        </div>
+
+        <div class="editorSection">
+            <h3>⚔️ ARMA</h3>
+            <div class="editorOptions" id="weaponOptions">
+                <!-- Opciones de arma -->
+            </div>
+        </div>
+
+        <button
+            class="mainButton secondary"
+            id="editorBack">
+            ← VOLVER
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PAUSA
+========================= -->
+
+<div id="pauseScreen"
+     class="screen hidden">
+
+    <div class="pauseBox">
+
+        <h1>PAUSA</h1>
+
+        <button
+            class="mainButton"
+            id="resumeButton">
+            ▶ CONTINUAR
+        </button>
+
+        <br><br>
+
+        <button
+            class="mainButton secondary"
+            id="pauseMenuButton">
+            ← MENÚ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RESULTADO
+========================= -->
+
+<div id="resultScreen"
+     class="screen hidden">
+
+    <div class="menuBox">
+
+        <div
+            id="resultTitle"
+            style="
+                font-size:48px;
+                font-weight:1000;
+                margin-bottom:10px">
+        </div>
+
+        <p id="resultText"
+           style="color:#b9c6d1">
+        </p>
+
+        <div
+            id="resultStats"
+            style="
+                margin:20px;
+                line-height:2">
+        </div>
+
+        <div class="buttons">
+
+            <button
+                id="nextLevelButton"
+                class="mainButton">
+                SIGUIENTE ▶
+            </button>
+
+            <button
+                id="retryButton"
+                class="mainButton secondary">
+                🔄 REPETIR
+            </button>
+
+            <button
+                id="resultMenuButton"
+                class="mainButton secondary">
+                ← MENÚ
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
-    // ================================================================
-    //  DEVIL'S ASCENT - EDICIÓN DEFINITIVA
-    //  - Niveles más largos con scroll horizontal
-    //  - Más obstáculos lógicos
-    //  - Paisajes dinámicos que cambian cada nivel
-    // ================================================================
-    
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const W = 1200; // Canvas más ancho para scroll
-    const H = 550;
-    
-    // Sistema de cámara
-    let cameraX = 0;
-    const LEVEL_WIDTH = 2400; // Niveles más largos
-    
-    const menuOverlay = document.getElementById('menuOverlay');
-    const menuStartBtn = document.getElementById('menuStartBtn');
-    const menuBtn = document.getElementById('menuBtn');
-    const worldDisplay = document.getElementById('worldDisplay');
-    const levelDisplay = document.getElementById('levelDisplay');
-    const maxLevelDisplay = document.getElementById('maxLevelDisplay');
-    const heartsDisplay = document.getElementById('heartsDisplay');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const deathsDisplay = document.getElementById('deathsDisplay');
-    const difficultyDisplay = document.getElementById('difficultyDisplay');
-    const messageText = document.getElementById('messageText');
-    
-    const GRAVITY = 0.55;
-    const FRICTION = 0.88;
-    const PLAYER_SPEED = 4.2;
-    const JUMP_FORCE = -10.5;
-    const MAX_HEARTS = 3;
-    const TOTAL_WORLDS = 5;
-    const LEVELS_PER_WORLD = 50;
-    
-    const customization = {
-        color: 'blue',
-        hat: 'none',
-        accessory: 'none',
-        extra: 'none'
-    };
-    
-    const colorMap = {
-        blue: { body: '#4fc3f7', bodyDark: '#0288d1', skin: '#ffccbc', accent: '#e94560' },
-        red: { body: '#ff6b6b', bodyDark: '#c0392b', skin: '#ffccbc', accent: '#f39c12' },
-        green: { body: '#6bcb77', bodyDark: '#27ae60', skin: '#ffccbc', accent: '#f1c40f' },
-        purple: { body: '#a855f7', bodyDark: '#7c3aed', skin: '#ffccbc', accent: '#ec4899' },
-        gold: { body: '#fbbf24', bodyDark: '#d97706', skin: '#ffccbc', accent: '#e94560' },
-        pink: { body: '#f472b6', bodyDark: '#db2777', skin: '#ffccbc', accent: '#8b5cf6' },
-        cyan: { body: '#22d3ee', bodyDark: '#0891b2', skin: '#ffccbc', accent: '#f472b6' },
-        orange: { body: '#fb923c', bodyDark: '#ea580c', skin: '#ffccbc', accent: '#e94560' }
-    };
-    
-    let currentWorld = 0;
-    let currentLevelInWorld = 0;
-    let hearts = MAX_HEARTS;
-    let totalDeaths = 0;
-    let gameTime = 0;
-    let gameRunning = true;
-    let levelComplete = false;
-    let deathAnimation = false;
-    let particles = [];
-    let frameCount = 0;
-    let messageTimeout = null;
-    let comboCount = 0;
-    let showMenu = true;
-    let selectedWorld = 0;
-    let levelTransitioning = false;
-    let nextLevelTimer = 0;
-    
-    const keys = {};
-    
-    const player = {
-        x: 60, y: 400, w: 30, h: 46,
-        vx: 0, vy: 0,
-        onGround: false,
-        facing: 1,
-        jumping: false,
-        walkFrame: 0,
-        walkTimer: 0,
-        hurtTimer: 0,
-        invincible: false,
-        invincibleTimer: 0,
-        armAngle: 0
-    };
-    
-    let levels = [];
-    let levelState = {};
-    
-    // ================================================================
-    //  GENERADOR DE NIVELES MEJORADO
-    // ================================================================
-    function generateAllLevels() {
-        levels = [];
-        
-        // Paletas de colores dinámicas para cada nivel
-        const worldThemes = [];
-        
-        // Bosque - Verdes y marrones
-        for (let i = 0; i < 10; i++) {
-            worldThemes.push({
-                name: '🌲 Bosque', bg: 'forest', 
-                color: `hsl(${100 + i * 5}, 40%, ${20 + i * 3}%)`,
-                trapColor: '#e94560', 
-                platformColor: `hsl(${110 + i * 3}, 45%, ${25 + i * 2}%)`,
-                skyColor: `hsl(${190 + i * 5}, 60%, ${15 + i * 4}%)`
-            });
-        }
-        
-        // Desierto - Naranjas y rojos
-        for (let i = 0; i < 10; i++) {
-            worldThemes.push({
-                name: '🏜️ Desierto', bg: 'desert', 
-                color: `hsl(${30 + i * 4}, 60%, ${15 + i * 3}%)`,
-                trapColor: '#ff6b35', 
-                platformColor: `hsl(${35 + i * 3}, 55%, ${30 + i * 2}%)`,
-                skyColor: `hsl(${25 + i * 3}, 70%, ${20 + i * 3}%)`
-            });
-        }
-        
-        // Tundra - Azules y blancos
-        for (let i = 0; i < 10; i++) {
-            worldThemes.push({
-                name: '❄️ Tundra', bg: 'tundra', 
-                color: `hsl(${200 + i * 4}, 50%, ${15 + i * 3}%)`,
-                trapColor: '#4fc3f7', 
-                platformColor: `hsl(${180 + i * 3}, 40%, ${30 + i * 2}%)`,
-                skyColor: `hsl(${210 + i * 3}, 60%, ${20 + i * 3}%)`
-            });
-        }
-        
-        // Volcán - Rojos y negros
-        for (let i = 0; i < 10; i++) {
-            worldThemes.push({
-                name: '🌋 Volcán', bg: 'volcano', 
-                color: `hsl(${0 + i * 3}, 70%, ${10 + i * 2}%)`,
-                trapColor: '#ff4757', 
-                platformColor: `hsl(${10 + i * 2}, 65%, ${25 + i * 2}%)`,
-                skyColor: `hsl(${350 + i * 3}, 75%, ${15 + i * 2}%)`
-            });
-        }
-        
-        // Espacio - Morados y azules
-        for (let i = 0; i < 10; i++) {
-            worldThemes.push({
-                name: '🌌 Espacio', bg: 'space', 
-                color: `hsl(${250 + i * 5}, 50%, ${10 + i * 2}%)`,
-                trapColor: '#a855f7', 
-                platformColor: `hsl(${220 + i * 4}, 45%, ${25 + i * 2}%)`,
-                skyColor: `hsl(${260 + i * 4}, 55%, ${15 + i * 2}%)`
-            });
-        }
-        
-        for (let w = 0; w < TOTAL_WORLDS; w++) {
-            for (let lv = 0; lv < LEVELS_PER_WORLD; lv++) {
-                const levelNum = lv + 1;
-                const difficulty = Math.min(3, Math.floor(levelNum / 12));
-                const themeIndex = w * 10 + Math.floor(lv / 5);
-                const theme = worldThemes[themeIndex] || worldThemes[0];
-                const level = generateLevel(w, lv, difficulty, theme);
-                levels.push(level);
-            }
-        }
+
+/* =========================================================
+   LEGENDS ADVENTURE
+   MOTOR PRINCIPAL MEJORADO
+========================================================= */
+
+"use strict";
+
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+let WIDTH = window.innerWidth;
+let HEIGHT = window.innerHeight;
+
+function resizeCanvas(){
+
+    WIDTH = window.innerWidth;
+    HEIGHT = window.innerHeight;
+
+    const ratio =
+        Math.min(window.devicePixelRatio || 1,2);
+
+    canvas.width =
+        WIDTH * ratio;
+
+    canvas.height =
+        HEIGHT * ratio;
+
+    canvas.style.width =
+        WIDTH + "px";
+
+    canvas.style.height =
+        HEIGHT + "px";
+
+    ctx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+}
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+resizeCanvas();
+
+
+/* =========================================================
+   MUNDOS MEJORADOS
+========================================================= */
+
+const worlds = [
+
+    {
+        name:"Bosque Vivo",
+        skyTop:"#87CEEB",
+        skyBottom:"#F0E68C",
+        mountain:"#228B22",
+        ground:"#8B4513",
+        dirt:"#654321",
+        ambientParticles:"leaves",
+        decoration:"trees",
+        fog:false,
+        water:true
+    },
+
+    {
+        name:"Desierto Dorado",
+        skyTop:"#FF8C00",
+        skyBottom:"#FFD700",
+        mountain:"#D2691E",
+        ground:"#DAA520",
+        dirt:"#8B4513",
+        ambientParticles:"sand",
+        decoration:"cactus",
+        fog:false,
+        water:false
+    },
+
+    {
+        name:"Glaciar",
+        skyTop:"#87CEEB",
+        skyBottom:"#F0F8FF",
+        mountain:"#B0C4DE",
+        ground:"#E0FFFF",
+        dirt:"#778899",
+        ambientParticles:"snow",
+        decoration:"pines",
+        fog:true,
+        water:true
+    },
+
+    {
+        name:"Volcán",
+        skyTop:"#8B0000",
+        skyBottom:"#FF4500",
+        mountain:"#A0522D",
+        ground:"#B22222",
+        dirt:"#2F4F4F",
+        ambientParticles:"embers",
+        decoration:"volcano",
+        fog:true,
+        water:false
+    },
+
+    {
+        name:"Fortaleza",
+        skyTop:"#2F4F4F",
+        skyBottom:"#696969",
+        mountain:"#4A4A4A",
+        ground:"#808080",
+        dirt:"#2F2F2F",
+        ambientParticles:"mist",
+        decoration:"towers",
+        fog:true,
+        water:false
     }
-    
-    function generateLevel(world, levelIndex, difficulty, theme) {
-        const levelNum = levelIndex + 1;
-        const isBossLevel = (levelNum % 10 === 0);
-        const isBonusLevel = (levelNum % 5 === 0 && !isBossLevel);
-        
-        const level = {
-            world: world,
-            index: levelIndex,
-            number: levelNum,
-            theme: theme,
-            difficulty: difficulty,
-            isBossLevel: isBossLevel,
-            isBonusLevel: isBonusLevel,
-            platforms: [],
-            traps: [],
-            spikes: [],
-            movingPlatforms: [],
-            fallingPlatforms: [],
-            rotatingObstacles: [],
-            enemies: [],
-            collectibles: [],
-            checkpoints: [],
-            goal: {x: LEVEL_WIDTH - 80, y: 470, w: 40, h: 40},
-            playerStart: {x: 50, y: 470},
-            specialEffects: [],
-            darkMode: false,
-            fireParticles: false,
-            invertedGravity: false,
-            wind: 0,
-            name: generateLevelName(world, levelNum, isBossLevel, isBonusLevel),
-            starRating: Math.min(5, 1 + difficulty + Math.floor(levelNum / 15))
+
+];
+
+
+/* =========================================================
+   PERSONAJES MEJORADOS
+========================================================= */
+
+const characters = [
+
+    {
+        id:"nova",
+        name:"Nova",
+        icon:"🦸",
+        speed:5.5,
+        jump:13.3,
+        damage:1,
+        description:"Equilibrado",
+        bodyType:"normal",
+        specialAbility:"none"
+    },
+
+    {
+        id:"shadow",
+        name:"Shadow",
+        icon:"🥷",
+        speed:6.8,
+        jump:13.8,
+        damage:1,
+        description:"Muy rápido",
+        bodyType:"slim",
+        specialAbility:"dash"
+    },
+
+    {
+        id:"cyber",
+        name:"Cyber",
+        icon:"🤖",
+        speed:5.1,
+        jump:12.6,
+        damage:2,
+        description:"Ataque fuerte",
+        bodyType:"robotic",
+        specialAbility:"laser"
+    },
+
+    {
+        id:"blaze",
+        name:"Blaze",
+        icon:"🔥",
+        speed:6,
+        jump:13.5,
+        damage:3,
+        description:"Especialista en daño",
+        bodyType:"normal",
+        specialAbility:"fireball"
+    },
+
+    {
+        id:"frost",
+        name:"Frost",
+        icon:"❄️",
+        speed:5.4,
+        jump:14.4,
+        damage:2,
+        description:"Gran salto",
+        bodyType:"normal",
+        specialAbility:"freeze"
+    },
+
+    {
+        id:"volt",
+        name:"Volt",
+        icon:"⚡",
+        speed:7,
+        jump:13,
+        damage:2,
+        description:"El más veloz",
+        bodyType:"slim",
+        specialAbility:"thunder"
+    }
+
+];
+
+
+/* =========================================================
+   TRAJES MEJORADOS
+========================================================= */
+
+const outfits = [
+
+    {
+        id:"classic",
+        name:"Clásico",
+        icon:"🔴",
+        unlock:1,
+        color:"#e53935",
+        cape:false,
+        mask:false
+    },
+
+    {
+        id:"blue",
+        name:"Guardian Azul",
+        icon:"🔵",
+        unlock:2,
+        color:"#1976d2",
+        cape:true,
+        mask:false
+    },
+
+    {
+        id:"shadow",
+        name:"Sombra",
+        icon:"⚫",
+        unlock:3,
+        color:"#242c39",
+        cape:true,
+        mask:true
+    },
+
+    {
+        id:"toxic",
+        name:"Tóxico",
+        icon:"🟢",
+        unlock:4,
+        color:"#43a047",
+        cape:false,
+        mask:true
+    },
+
+    {
+        id:"gold",
+        name:"Legendario",
+        icon:"🟡",
+        unlock:5,
+        color:"#d5a916",
+        cape:true,
+        mask:true
+    }
+
+];
+
+
+/* =========================================================
+   EDITOR DE PERSONAJE
+========================================================= */
+
+const editorData = {
+    color: "#e53935",
+    head: 1,
+    hair: 1,
+    cape: 0,
+    weapon: 1
+};
+
+const editorOptions = {
+    colors: [
+        "#e53935", "#1976d2", "#43a047", 
+        "#d5a916", "#8e24aa", "#ff9800",
+        "#00bcd4", "#f44336", "#4caf50"
+    ],
+    heads: [
+        {id:1, name:"Clásico", icon:"👤"},
+        {id:2, name:"Robot", icon:"🤖"},
+        {id:3, name:"Ninja", icon:"🥷"},
+        {id:4, name:"Casco", icon:"⛑️"}
+    ],
+    hairs: [
+        {id:1, name:"Corto", icon:"💇"},
+        {id:2, name:"Largo", icon:"💁"},
+        {id:3, name:"Pinchos", icon:"🧑‍🎤"},
+        {id:4, name:"Sin pelo", icon:"🦲"}
+    ],
+    capes: [
+        {id:0, name:"Sin capa", icon:"🚫"},
+        {id:1, name:"Capa corta", icon:"🦸"},
+        {id:2, name:"Capa larga", icon:"🧙"},
+        {id:3, name:"Alas", icon:"🪽"}
+    ],
+    weapons: [
+        {id:1, name:"Básico", icon:"🔫"},
+        {id:2, name:"Espada", icon:"⚔️"},
+        {id:3, name:"Bastón", icon:"🪄"},
+        {id:4, name:"Cañón", icon:"💥"}
+    ]
+};
+
+
+/* =========================================================
+   GUARDADO MEJORADO
+========================================================= */
+
+const SAVE_KEY =
+    "LEGENDS_ADVENTURE_SAVE_V2";
+
+let save = {
+
+    unlockedLevel:1,
+
+    completed:[],
+
+    character:"nova",
+
+    outfit:"classic",
+
+    customCharacter:null,
+
+    totalCoins:0,
+
+    achievements:[]
+
+};
+
+try{
+
+    const old =
+        localStorage.getItem(
+            SAVE_KEY
+        );
+
+    if(old){
+
+        save = {
+            ...save,
+            ...JSON.parse(old)
         };
-        
-        // === PLATAFORMA BASE (con huecos) ===
-        for (let x = 0; x < LEVEL_WIDTH; x += 120) {
-            // Crear huecos en el suelo para más dificultad
-            if (Math.random() > 0.15 || x < 200) {
-                const gapWidth = 80 + Math.random() * 60;
-                if (x + gapWidth < LEVEL_WIDTH - 100) {
-                    level.platforms.push({x: x, y: 510, w: gapWidth, h: 40, type: 'solid'});
-                }
-            }
+
+    }
+
+}catch(error){}
+
+function saveGame(){
+
+    try{
+
+        localStorage.setItem(
+            SAVE_KEY,
+            JSON.stringify(save)
+        );
+
+    }catch(error){}
+
+}
+
+
+/* =========================================================
+   ESTADO DEL JUEGO
+========================================================= */
+
+let gameState =
+    "menu";
+
+let currentWorld =
+    1;
+
+let currentLevel =
+    1;
+
+let lives =
+    3;
+
+let score =
+    0;
+
+let coins =
+    0;
+
+let cameraX =
+    0;
+
+let ambientParticles = [];
+
+let levelTime = 0;
+
+
+/* =========================================================
+   JUGADOR MEJORADO
+========================================================= */
+
+const player = {
+
+    x:100,
+
+    y:0,
+
+    width:38,
+
+    height:58,
+
+    vx:0,
+
+    vy:0,
+
+    face:1,
+
+    grounded:false,
+
+    invincible:0,
+
+    shotCooldown:0,
+
+    power:null,
+
+    powerTimer:0,
+
+    animation:0,
+
+    state:"idle", // idle, running, jumping, falling, hurt, shooting
+
+    animTimer:0,
+
+    specialCooldown:0,
+
+    specialTimer:0,
+
+    dashTimer:0,
+
+    dashDirection:1
+
+};
+
+
+/* =========================================================
+   MUNDO DEL NIVEL
+========================================================= */
+
+let platforms = [];
+
+let enemies = [];
+
+let hazards = [];
+
+let collectibles = [];
+
+let powerups = [];
+
+let projectiles = [];
+
+let particles = [];
+
+let goal = {
+
+    x:0,
+
+    y:0,
+
+    width:55,
+
+    height:130
+
+};
+
+let spawnPoint = {
+
+    x:100,
+
+    y:0
+
+};
+
+
+/* =========================================================
+   TECLADO
+========================================================= */
+
+const keys = {};
+
+window.addEventListener(
+    "keydown",
+    event=>{
+
+        keys[event.code] = true;
+
+        if(
+            event.code === "Space" ||
+            event.code === "ArrowUp" ||
+            event.code === "KeyW"
+        ){
+
+            event.preventDefault();
+
+            jump();
+
         }
-        
-        // === PLATAFORMAS FLOTANTES ===
-        const numPlatforms = 8 + difficulty * 3 + Math.floor(levelNum / 5);
-        let lastX = 100;
-        let lastY = 470;
-        
-        for (let i = 0; i < numPlatforms; i++) {
-            const pWidth = 50 + Math.random() * 60 + (isBonusLevel ? 30 : 0);
-            const pX = lastX + 100 + Math.random() * 60;
-            const pY = Math.max(80, lastY - (50 + Math.random() * 60));
-            
-            let type = 'solid';
-            const rand = Math.random();
-            
-            if (difficulty >= 1 && rand < 0.15 + difficulty * 0.08) {
-                type = 'moving';
-            } else if (difficulty >= 2 && rand > 0.75 && rand < 0.85) {
-                type = 'falling';
-            } else if (difficulty >= 1 && rand > 0.85 && rand < 0.92) {
-                type = 'bouncy';
-            }
-            
-            const platform = {x: pX, y: pY, w: pWidth, h: 18, type: type};
-            
-            if (type === 'moving') {
-                platform.moveX = 80 + Math.random() * 120;
-                platform.speed = 0.5 + Math.random() * 1.5;
-                platform.phase = Math.random() * Math.PI * 2;
-                level.movingPlatforms.push(platform);
-            } else if (type === 'falling') {
-                platform.fallDelay = Math.max(10, 30 - difficulty * 5);
-                level.fallingPlatforms.push(platform);
-            }
-            
-            level.platforms.push(platform);
-            lastX = pX + pWidth;
-            lastY = pY;
+
+        if(
+            event.code === "KeyX" ||
+            event.code === "KeyJ"
+        ){
+
+            shoot();
+
         }
-        
-        // === OBSTÁCULOS ROTATORIOS ===
-        if (difficulty >= 2) {
-            const numRotating = 1 + Math.floor(levelNum / 15);
-            for (let i = 0; i < numRotating; i++) {
-                const rx = 400 + i * 300 + Math.random() * 100;
-                const ry = 350 + Math.random() * 100;
-                level.rotatingObstacles.push({
-                    x: rx, y: ry,
-                    radius: 30 + Math.random() * 20,
-                    angle: Math.random() * Math.PI * 2,
-                    speed: 0.02 + Math.random() * 0.03
-                });
-            }
+
+        if(
+            event.code === "KeyC" ||
+            event.code === "KeyK"
+        ){
+
+            useSpecial();
+
         }
-        
-        // === ENEMIGOS SIMPLES ===
-        if (difficulty >= 1) {
-            const numEnemies = 1 + Math.floor(levelNum / 10);
-            for (let i = 0; i < numEnemies; i++) {
-                const ex = 500 + i * 200 + Math.random() * 150;
-                const ey = 480 + Math.random() * 20;
-                level.enemies.push({
-                    x: ex, y: ey, w: 25, h: 25,
-                    vx: 1 + Math.random() * 2,
-                    range: 60 + Math.random() * 40,
-                    origX: ex
-                });
-            }
+
+        if(event.code === "Escape"){
+
+            togglePause();
+
         }
-        
-        // === COLECCIONABLES (monedas) ===
-        if (!isBossLevel) {
-            const numCoins = 5 + Math.floor(levelNum / 5);
-            for (let i = 0; i < numCoins; i++) {
-                const cx = 300 + i * 180 + Math.random() * 50;
-                const cy = 400 + Math.random() * 80;
-                level.collectibles.push({x: cx, y: cy, w: 20, h: 20, collected: false});
-            }
+
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    event=>{
+
+        keys[event.code] = false;
+
+    }
+);
+
+
+/* =========================================================
+   BOTONES TÁCTILES
+========================================================= */
+
+let touchLeft = false;
+let touchRight = false;
+
+function touchButton(
+    id,
+    down,
+    up
+){
+
+    const button =
+        document.getElementById(id);
+
+    button.addEventListener(
+        "touchstart",
+        event=>{
+
+            event.preventDefault();
+
+            down();
+
+        },
+        {passive:false}
+    );
+
+    button.addEventListener(
+        "touchend",
+        event=>{
+
+            event.preventDefault();
+
+            up();
+
+        },
+        {passive:false}
+    );
+
+    button.addEventListener(
+        "mousedown",
+        event=>{
+
+            event.preventDefault();
+
+            down();
+
         }
-        
-        // === CHECKPOINTS ===
-        if (levelNum > 3 && levelNum % 4 === 0) {
-            const cpX = LEVEL_WIDTH * 0.5;
-            level.checkpoints.push({x: cpX, y: 470, w: 30, h: 40, activated: false});
+    );
+
+    button.addEventListener(
+        "mouseup",
+        event=>{
+
+            event.preventDefault();
+
+            up();
+
         }
-        
-        // === PÚAS FIJAS ===
-        const numSpikes = 5 + difficulty * 3 + Math.floor(levelNum / 6);
-        for (let i = 0; i < Math.min(numSpikes, 25); i++) {
-            let spikeX = 100 + Math.random() * (LEVEL_WIDTH - 200);
-            let spikeY;
-            
-            if (Math.random() < 0.7) {
-                spikeY = 490 + Math.random() * 15;
-            } else {
-                const p = level.platforms[Math.floor(Math.random() * level.platforms.length)];
-                if (p && p.y > 350 && p.y < 500 && p.w > 40) {
-                    spikeX = p.x + 15 + Math.random() * (p.w - 30);
-                    spikeY = p.y - 16;
-                } else {
-                    spikeY = 490 + Math.random() * 10;
-                }
-            }
-            
-            let valid = true;
-            for (const s of level.spikes) {
-                if (Math.abs(s.x - spikeX) < 30) { valid = false; break; }
-            }
-            if (spikeX > LEVEL_WIDTH - 150) valid = false;
-            
-            if (valid) {
-                level.spikes.push({ x: spikeX, y: spikeY, w: 22, h: 16, type: 'spike' });
-            }
+    );
+
+    button.addEventListener(
+        "mouseleave",
+        event=>{
+
+            up();
+
         }
-        
-        // === TRAMPAS ACTIVAS ===
-        const numTraps = 3 + difficulty * 2 + Math.floor(levelNum / 8);
-        for (let i = 0; i < Math.min(numTraps, 15); i++) {
-            const trapX = 150 + Math.random() * (LEVEL_WIDTH - 300);
-            let trapY = 490 + Math.random() * 10;
-            
-            for (const p of level.platforms) {
-                if (trapX > p.x + 10 && trapX < p.x + p.w - 20 && p.y > 400) {
-                    trapY = p.y - 16;
+    );
+}
+
+
+touchButton(
+    "leftButton",
+    ()=>touchLeft=true,
+    ()=>touchLeft=false
+);
+
+touchButton(
+    "rightButton",
+    ()=>touchRight=true,
+    ()=>touchRight=false
+);
+
+document
+.getElementById("jumpButton")
+.addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        jump();
+    },
+    {passive:false}
+);
+
+document
+.getElementById("shootButton")
+.addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        shoot();
+    },
+    {passive:false}
+);
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function getCharacter(){
+
+    return characters.find(
+        c=>c.id===save.character
+    ) || characters[0];
+
+}
+
+function getOutfit(){
+
+    return outfits.find(
+        o=>o.id===save.outfit
+    ) || outfits[0];
+
+}
+
+function getCustomCharacter(){
+
+    return save.customCharacter || null;
+
+}
+
+function collision(a,b){
+
+    return (
+
+        a.x < b.x+b.width &&
+
+        a.x+a.width > b.x &&
+
+        a.y < b.y+b.height &&
+
+        a.y+a.height > b.y
+
+    );
+
+}
+
+function clamp(
+    value,
+    minimum,
+    maximum
+){
+
+    return Math.max(
+        minimum,
+        Math.min(maximum,value)
+    );
+
+}
+
+
+/* =========================================================
+   CREAR NIVEL MEJORADO
+========================================================= */
+
+function createLevel(){
+
+    platforms = [];
+    enemies = [];
+    hazards = [];
+    collectibles = [];
+    powerups = [];
+    projectiles = [];
+    particles = [];
+    ambientParticles = [];
+
+    levelTime = 0;
+
+    const floor =
+        Math.max(
+            360,
+            HEIGHT-85
+        );
+
+    const levelLayouts = [
+
+        /* NIVEL 1 */
+
+        [
+
+            [0,floor,650],
+
+            [710,floor-45,250],
+
+            [1020,floor,440],
+
+            [1510,floor-55,300],
+
+            [1870,floor,520],
+
+            [2470,floor-50,310],
+
+            [2870,floor,650]
+
+        ],
+
+        /* NIVEL 2 */
+
+        [
+
+            [0,floor,550],
+
+            [620,floor-50,220],
+
+            [920,floor-95,230],
+
+            [1230,floor-45,300],
+
+            [1610,floor-85,240],
+
+            [1940,floor,480],
+
+            [2500,floor-75,280],
+
+            [2860,floor,650]
+
+        ],
+
+        /* NIVEL 3 */
+
+        [
+
+            [0,floor,520],
+
+            [590,floor-50,210],
+
+            [870,floor-105,210],
+
+            [1150,floor-50,210],
+
+            [1430,floor-110,220],
+
+            [1720,floor-50,230],
+
+            [2040,floor-95,230],
+
+            [2360,floor,500],
+
+            [2940,floor-70,280],
+
+            [3310,floor,500]
+
+        ],
+
+        /* NIVEL 4 */
+
+        [
+
+            [0,floor,510],
+
+            [580,floor-65,200],
+
+            [850,floor-120,190],
+
+            [1110,floor-55,210],
+
+            [1400,floor-125,200],
+
+            [1690,floor-70,210],
+
+            [1990,floor-120,210],
+
+            [2300,floor-65,220],
+
+            [2620,floor,450],
+
+            [3150,floor-80,270],
+
+            [3500,floor,600]
+
+        ],
+
+        /* NIVEL 5 */
+
+        [
+
+            [0,floor,500],
+
+            [570,floor-60,190],
+
+            [830,floor-120,185],
+
+            [1090,floor-65,190],
+
+            [1360,floor-135,190],
+
+            [1630,floor-75,200],
+
+            [1920,floor-125,200],
+
+            [2220,floor-70,210],
+
+            [2530,floor-130,210],
+
+            [2840,floor-75,220],
+
+            [3160,floor,420],
+
+            [3650,floor-85,260],
+
+            [3990,floor,650]
+
+        ]
+
+    ];
+
+    const layout =
+        levelLayouts[
+            currentLevel-1
+        ];
+
+    for(
+        const data of layout
+    ){
+
+        platforms.push({
+
+            x:data[0],
+
+            y:data[1],
+
+            width:data[2],
+
+            height:300
+
+        });
+
+    }
+
+
+    /* MONEDAS */
+
+    for(
+        let i=1;
+        i<layout.length;
+        i++
+    ){
+
+        const p =
+            layout[i];
+
+        collectibles.push({
+
+            x:p[0]+p[2]/2,
+
+            y:p[1]-35,
+
+            radius:10,
+
+            collected:false,
+
+            bobOffset:Math.random()*Math.PI*2
+
+        });
+
+    }
+
+
+    if(currentLevel>=3){
+
+        for(
+            let i=2;
+            i<layout.length-1;
+            i+=2
+        ){
+
+            const p =
+                layout[i];
+
+            collectibles.push({
+
+                x:p[0]+p[2]*.25,
+
+                y:p[1]-35,
+
+                radius:10,
+
+                collected:false,
+
+                bobOffset:Math.random()*Math.PI*2
+
+            });
+
+        }
+
+    }
+
+
+    /* ENEMIGOS MEJORADOS */
+
+    const enemyTypes = [
+        {type:"walker", color:"#71452e", hp:1, speed:0.8},
+        {type:"flyer", color:"#3c8050", hp:2, speed:1.2},
+        {type:"shooter", color:"#67458a", hp:2, speed:0.5},
+        {type:"tank", color:"#8b4513", hp:3, speed:0.3}
+    ];
+
+    const enemyPositions = [
+
+        [450,0],
+
+        [1130,1],
+
+        [1740,0],
+
+        [2200,2],
+
+        [2700,1],
+
+        [3100,0],
+
+        [3400,2],
+
+        [3850,1]
+
+    ];
+
+    enemyPositions.forEach(
+        (data,index)=>{
+
+            const x =
+                data[0];
+
+            let platform =
+                null;
+
+            for(
+                const p of platforms
+            ){
+
+                if(
+                    x >= p.x &&
+                    x <= p.x+p.width-45
+                ){
+
+                    platform = p;
                     break;
+
                 }
+
             }
-            
-            const trapType = Math.random() < 0.4 ? 'spike' : 'laser';
-            level.traps.push({
-                x: trapX,
-                y: trapY,
-                w: 26 + Math.random() * 28,
-                h: 18,
-                type: trapType,
-                active: true,
-                pattern: Math.random() < 0.5 ? 'pulse' : 'sweep',
-                phase: Math.random() * Math.PI * 2,
-                speed: 1.0 + Math.random() * 2.5 + difficulty * 0.2
+
+            if(!platform)return;
+
+            const enemyType = enemyTypes[index % enemyTypes.length];
+
+            enemies.push({
+
+                x:x,
+
+                y:platform.y-42,
+
+                width:42,
+
+                height:42,
+
+                vx:index%2===0?.8:-.8,
+
+                origin:x,
+
+                range:70,
+
+                hp:enemyType.hp,
+
+                type:enemyType.type,
+
+                color:enemyType.color,
+
+                speed:enemyType.speed,
+
+                alive:true,
+
+                shootTimer:Math.random()*100
+
             });
+
         }
-        
-        // === NIVELES JEFE ===
-        if (isBossLevel) {
-            level.bossMode = true;
-            for (let i = 0; i < 8 + difficulty * 3; i++) {
-                level.traps.push({
-                    x: 100 + i * 140,
-                    y: 490,
-                    w: 35,
-                    h: 18,
-                    type: 'laser',
-                    active: true,
-                    pattern: 'sweep',
-                    phase: i * 0.15,
-                    speed: 2 + Math.random() * 1
-                });
-            }
-            for (let i = 0; i < 12 + difficulty * 3; i++) {
-                level.spikes.push({
-                    x: 80 + i * 100,
-                    y: 490,
-                    w: 22,
-                    h: 16,
-                    type: 'spike'
-                });
-            }
-            level.goal.x = LEVEL_WIDTH - 60;
-        }
-        
-        // === NIVELES BONUS ===
-        if (isBonusLevel && !isBossLevel) {
-            level.bonusMode = true;
-            level.goal.x = LEVEL_WIDTH - 60;
-            level.specialEffects.push({type: 'stars', count: 10 + Math.random() * 15});
-        }
-        
-        return level;
+    );
+
+
+    /* TRAMPAS */
+
+    for(
+        let i=2;
+        i<layout.length-1;
+        i+=2
+    ){
+
+        const p =
+            layout[i];
+
+        hazards.push({
+
+            x:p[0]+p[2]*.58,
+
+            y:p[1]-20,
+
+            width:45,
+
+            height:20,
+
+            active:true,
+
+            timer:0
+
+        });
+
     }
-    
-    function generateLevelName(world, num, isBoss, isBonus) {
-        const worldNames = ['Bosque', 'Desierto', 'Tundra', 'Volcán', 'Espacio'];
-        const prefixes = ['Camino', 'Sendero', 'Cueva', 'Pico', 'Valle', 'Cascada', 'Abismo', 'Cumbre', 'Cañón', 'Cráter', 'Ruta', 'Travesía'];
-        const suffixes = ['del Alba', 'del Crepúsculo', 'de la Muerte', 'del Fuego', 'del Hielo', 'de la Luz', 'de la Sombra', 'del Viento', 'del Trueno', 'del Silencio', 'Perdido', 'Olvidado'];
-        
-        if (isBoss) return `👑 JEFE: ${worldNames[world]} ${num}`;
-        if (isBonus) return `⭐ BONUS: ${worldNames[world]} ${num}`;
-        
-        const p = prefixes[num % prefixes.length];
-        const s = suffixes[(num * 2) % suffixes.length];
-        return `${p} ${s}`;
+
+
+    /* PODERES */
+
+    if(platforms[2]){
+
+        powerups.push({
+
+            x:platforms[2].x+80,
+
+            y:platforms[2].y-45,
+
+            width:25,
+
+            height:25,
+
+            type:"shield",
+
+            collected:false
+
+        });
+
     }
-    
-    // ================================================================
-    //  INICIALIZAR NIVEL
-    // ================================================================
-    function initLevel() {
-        const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
-        const level = levels[levelIndex];
-        if (!level) {
-            if (currentWorld < TOTAL_WORLDS - 1) {
-                currentWorld++;
-                currentLevelInWorld = 0;
-                initLevel();
-            }
-            return;
-        }
-        
-        player.x = level.playerStart.x || 50;
-        player.y = level.playerStart.y || 470;
-        player.vx = 0;
-        player.vy = 0;
-        player.onGround = false;
-        player.invincible = false;
-        player.invincibleTimer = 0;
-        player.hurtTimer = 0;
-        levelTransitioning = false;
-        nextLevelTimer = 0;
-        cameraX = 0;
-        
-        levelState = {
-            movingPlatforms: [],
-            fallingPlatforms: [],
-            trapTimers: {},
-            platformStates: {},
-            specialParticles: [],
-            enemyStates: []
-        };
-        
-        level.movingPlatforms.forEach((p, idx) => {
-            levelState.movingPlatforms.push({
-                index: idx,
-                origX: p.x,
-                origY: p.y,
-                phase: p.phase || 0,
-                timer: Math.random() * 100
+
+    if(
+        currentLevel>=3 &&
+        platforms[5]
+    ){
+
+        powerups.push({
+
+            x:platforms[5].x+80,
+
+            y:platforms[5].y-45,
+
+            width:25,
+
+            height:25,
+
+            type:"speed",
+
+            collected:false
+
+        });
+
+    }
+
+
+    /* META */
+
+    const last =
+        platforms[
+            platforms.length-1
+        ];
+
+    goal.x =
+        last.x+
+        last.width-
+        75;
+
+    goal.y =
+        last.y-
+        130;
+
+    spawnPoint.x =
+        100;
+
+    spawnPoint.y =
+        platforms[0].y-
+        player.height;
+
+    player.x =
+        spawnPoint.x;
+
+    player.y =
+        spawnPoint.y;
+
+    player.vx = 0;
+    player.vy = 0;
+
+    player.grounded = true;
+
+    player.face = 1;
+
+    player.invincible = 100;
+
+    player.power = null;
+
+    player.powerTimer = 0;
+
+    player.state = "idle";
+
+    player.specialCooldown = 0;
+
+    player.specialTimer = 0;
+
+    cameraX = 0;
+
+}
+
+
+/* =========================================================
+   INICIAR NIVEL
+========================================================= */
+
+function startLevel(
+    world,
+    level
+){
+
+    currentWorld = world;
+    currentLevel = level;
+
+    lives = 3;
+    score = 0;
+    coins = 0;
+
+    gameState =
+        "playing";
+
+    hideAllScreens();
+
+    document
+        .getElementById("hud")
+        .classList
+        .remove("hidden");
+
+    document
+        .getElementById("mobileControls")
+        .classList
+        .remove("hidden");
+
+    createLevel();
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   SALTO
+========================================================= */
+
+function jump(){
+
+    if(
+        gameState !== "playing"
+    )return;
+
+    if(
+        !player.grounded
+    )return;
+
+    const c =
+        getCharacter();
+
+    let power =
+        0;
+
+    if(
+        player.power === "jump"
+    ){
+
+        power = 2;
+
+    }
+
+    player.vy =
+        -(c.jump+power);
+
+    player.grounded =
+        false;
+
+    player.state = "jumping";
+
+    createParticles(
+        player.x+20,
+        player.y+55,
+        5,
+        "#ffffff"
+    );
+
+}
+
+
+/* =========================================================
+   DISPARO
+========================================================= */
+
+function shoot(){
+
+    if(
+        gameState !== "playing"
+    )return;
+
+    if(
+        player.shotCooldown>0
+    )return;
+
+    const c =
+        getCharacter();
+
+    let damage =
+        c.damage;
+
+    if(
+        player.power === "fire"
+    ){
+
+        damage += 2;
+
+    }
+
+    const customChar = getCustomCharacter();
+
+    if(customChar && customChar.weapon === 2) {
+        // Espada - ataque cuerpo a cuerpo
+        projectiles.push({
+            x: player.x + (player.face===1 ? player.width : 0),
+            y: player.y+27,
+            vx: player.face*8,
+            radius: 15,
+            damage: damage + 1,
+            type: "sword"
+        });
+    } else if(customChar && customChar.weapon === 4) {
+        // Cañón - proyectil grande
+        projectiles.push({
+            x: player.x + (player.face===1 ? player.width : 0),
+            y: player.y+27,
+            vx: player.face*9,
+            radius: 12,
+            damage: damage + 2,
+            type: "cannon"
+        });
+    } else {
+        // Proyectil normal
+        projectiles.push({
+            x: player.x + (player.face===1 ? player.width : 0),
+            y: player.y+27,
+            vx: player.face*11,
+            radius: 7,
+            damage: damage,
+            type: "normal"
+        });
+    }
+
+    player.shotCooldown =
+        14;
+
+    player.state = "shooting";
+    player.animTimer = 10;
+
+}
+
+
+/* =========================================================
+   HABILIDAD ESPECIAL
+========================================================= */
+
+function useSpecial(){
+
+    if(
+        gameState !== "playing"
+    )return;
+
+    if(
+        player.specialCooldown > 0
+    )return;
+
+    const c =
+        getCharacter();
+
+    const customChar = getCustomCharacter();
+
+    const ability = c.specialAbility;
+
+    player.specialCooldown = 300; // 5 segundos
+
+    switch(ability) {
+
+        case "dash":
+            player.dashTimer = 15;
+            player.dashDirection = player.face;
+            player.vx = player.face * 15;
+            createParticles(player.x+20, player.y+30, 10, "#ffffff");
+            break;
+
+        case "laser":
+            projectiles.push({
+                x: player.x + (player.face===1 ? player.width : 0),
+                y: player.y+27,
+                vx: player.face*20,
+                radius: 5,
+                damage: 5,
+                type: "laser"
             });
-        });
-        
-        level.fallingPlatforms.forEach((p, idx) => {
-            levelState.fallingPlatforms.push({
-                index: idx,
-                origX: p.x,
-                origY: p.y,
-                timer: 0,
-                falling: false,
-                fallSpeed: 0,
-                resetTimer: 0
+            break;
+
+        case "fireball":
+            projectiles.push({
+                x: player.x + (player.face===1 ? player.width : 0),
+                y: player.y+27,
+                vx: player.face*12,
+                radius: 15,
+                damage: 8,
+                type: "fireball"
             });
-        });
-        
-        level.traps.forEach((trap, idx) => {
-            levelState.trapTimers[idx] = Math.random() * 100;
-        });
-        
-        level.enemies.forEach((enemy, idx) => {
-            levelState.enemyStates.push({
-                origX: enemy.x,
-                timer: Math.random() * 100
+            break;
+
+        case "freeze":
+            enemies.forEach(enemy => {
+                if(enemy.alive) {
+                    enemy.frozen = 120;
+                    createParticles(enemy.x+20, enemy.y+20, 5, "#00ffff");
+                }
             });
-        });
-        
-        level.collectibles.forEach(c => c.collected = false);
-        level.checkpoints.forEach(c => c.activated = false);
-        
-        gameTime = 0;
-        levelComplete = false;
-        deathAnimation = false;
-        particles = [];
-        
-        updateUI();
-        
-        const levelNum = currentLevelInWorld + 1;
-        const worldNum = currentWorld + 1;
-        const stars = '⭐'.repeat(Math.min(5, level.starRating || 1));
-        let msg = `🌍 Mundo ${worldNum} - Nivel ${levelNum} ${stars}`;
-        if (level.isBossLevel) msg = `👑 ${level.name} ${stars}`;
-        else if (level.isBonusLevel) msg = `⭐ ${level.name} ${stars}`;
-        else msg = `${level.name} ${stars}`;
-        
-        showMessage(msg, 1800);
-        gameRunning = true;
+            break;
+
+        case "thunder":
+            projectiles.push({
+                x: player.x + (player.face===1 ? player.width : 0),
+                y: player.y+10,
+                vx: player.face*15,
+                radius: 8,
+                damage: 7,
+                type: "thunder"
+            });
+            break;
+
+        default:
+            player.specialCooldown = 0;
+            break;
     }
-    
-    // ================================================================
-    //  ACTUALIZAR UI
-    // ================================================================
-    function updateUI() {
-        const worldNum = currentWorld + 1;
-        const levelNum = currentLevelInWorld + 1;
-        const level = levels[currentWorld * LEVELS_PER_WORLD + currentLevelInWorld];
-        
-        worldDisplay.textContent = `Mundo ${worldNum}`;
-        levelDisplay.textContent = levelNum;
-        maxLevelDisplay.textContent = LEVELS_PER_WORLD;
-        
-        if (level) {
-            const stars = '⭐'.repeat(Math.min(5, level.starRating || 1));
-            difficultyDisplay.textContent = stars;
-        }
-        
-        let heartsStr = '';
-        for (let i = 0; i < MAX_HEARTS; i++) {
-            heartsStr += i < hearts ? '❤️' : '🖤';
-        }
-        heartsDisplay.textContent = heartsStr;
-        
-        timerDisplay.textContent = Math.floor(gameTime);
-        deathsDisplay.textContent = totalDeaths;
+
+}
+
+
+/* =========================================================
+   RECIBIR DAÑO
+========================================================= */
+
+function hurtPlayer(){
+
+    if(
+        player.invincible>0
+    )return;
+
+    if(
+        player.power === "shield"
+    ){
+
+        player.power = null;
+
+        player.powerTimer = 0;
+
+        player.invincible = 70;
+
+        createParticles(
+            player.x+20,
+            player.y+25,
+            15,
+            "#ffd447"
+        );
+
+        return;
+
     }
-    
-    function showMessage(text, duration = 2000) {
-        messageText.textContent = text;
-        messageText.classList.add('show');
-        clearTimeout(messageTimeout);
-        messageTimeout = setTimeout(() => {
-            messageText.classList.remove('show');
-        }, duration);
+
+    lives--;
+
+    player.invincible =
+        110;
+
+    player.state = "hurt";
+    player.animTimer = 30;
+
+    player.vx = 0;
+
+    player.vy = -8;
+
+    if(lives<=0){
+
+        showResult(
+            "💀 DERROTA",
+            "Te quedaste sin vidas.",
+            false
+        );
+
+        return;
+
     }
-    
-    function rectCollide(a, b) {
-        return a.x < b.x + b.w && 
-               a.x + a.w > b.x &&
-               a.y < b.y + b.h && 
-               a.y + a.h > b.y;
+
+    player.x =
+        spawnPoint.x;
+
+    player.y =
+        spawnPoint.y;
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR MEJORADO
+========================================================= */
+
+function update(){
+
+    if(
+        gameState !== "playing"
+    )return;
+
+    levelTime++;
+
+    const c =
+        getCharacter();
+
+
+    /* MOVIMIENTO */
+
+    const left =
+        keys["ArrowLeft"] ||
+        keys["KeyA"] ||
+        touchLeft;
+
+    const right =
+        keys["ArrowRight"] ||
+        keys["KeyD"] ||
+        touchRight;
+
+
+    if(left){
+
+        player.vx -= .65;
+
+        player.face = -1;
+
     }
-    
-    // ================================================================
-    //  ACTUALIZACIÓN DEL JUEGO
-    // ================================================================
-    function update() {
-        if (!gameRunning || deathAnimation || levelComplete || showMenu || levelTransitioning) return;
-        
-        const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
-        const level = levels[levelIndex];
-        if (!level) return;
-        
-        frameCount++;
-        gameTime += 1/60;
-        
-        if (player.invincible) {
-            player.invincibleTimer--;
-            if (player.invincibleTimer <= 0) player.invincible = false;
-        }
-        
-        // Gravedad
-        if (level.invertedGravity) {
-            player.vy -= GRAVITY * 0.7;
+
+    if(right){
+
+        player.vx += .65;
+
+        player.face = 1;
+
+    }
+
+
+    const maximumSpeed =
+        c.speed *
+        (
+            player.power==="speed"
+            ?1.3
+            :1
+        );
+
+
+    player.vx =
+        clamp(
+            player.vx,
+            -maximumSpeed,
+            maximumSpeed
+        );
+
+
+    if(
+        !left &&
+        !right
+    ){
+
+        player.vx *= .82;
+
+    }
+
+
+    /* ESTADO DEL JUGADOR */
+
+    if(player.dashTimer > 0) {
+        player.dashTimer--;
+        player.vx = player.dashDirection * 15;
+        player.state = "dashing";
+    } else if(!player.grounded) {
+        if(player.vy < 0) {
+            player.state = "jumping";
         } else {
-            player.vy += GRAVITY;
+            player.state = "falling";
         }
-        
-        if (level.wind) {
-            player.vx += level.wind * 0.1;
+    } else if(Math.abs(player.vx) > 1) {
+        player.state = "running";
+    } else if(player.state !== "shooting" && player.state !== "hurt") {
+        player.state = "idle";
+    }
+
+    if(player.animTimer > 0) {
+        player.animTimer--;
+        if(player.animTimer <= 0 && player.state === "shooting") {
+            player.state = "idle";
         }
-        
-        // Movimiento
-        let moveX = 0;
-        if (keys['ArrowLeft'] || keys['KeyA'] || keys['left']) moveX = -1;
-        if (keys['ArrowRight'] || keys['KeyD'] || keys['right']) moveX = 1;
-        
-        player.vx += moveX * 0.7;
-        player.vx *= FRICTION;
-        const maxSpeed = PLAYER_SPEED + (level.wind ? Math.abs(level.wind) * 2 : 0);
-        if (Math.abs(player.vx) > maxSpeed) {
-            player.vx = maxSpeed * Math.sign(player.vx);
+    }
+
+
+    /* GRAVEDAD */
+
+    const previousBottom =
+        player.y+
+        player.height;
+
+
+    player.vy += .62;
+
+    if(
+        player.vy>17
+    ){
+
+        player.vy=17;
+
+    }
+
+
+    player.x +=
+        player.vx;
+
+    player.y +=
+        player.vy;
+
+
+    player.grounded =
+        false;
+
+
+    /* COLISIÓN CON PLATAFORMAS */
+
+    for(
+        const p of platforms
+    ){
+
+        const horizontal =
+
+            player.x+
+            player.width >
+            p.x &&
+
+            player.x <
+            p.x+
+            p.width;
+
+
+        const vertical =
+
+            previousBottom <= p.y &&
+
+            player.y+
+            player.height >= p.y &&
+
+            player.vy>=0;
+
+
+        if(
+            horizontal &&
+            vertical
+        ){
+
+            player.y =
+                p.y-
+                player.height;
+
+            player.vy = 0;
+
+            player.grounded =
+                true;
+
         }
-        
-        // Salto
-        const jumpKey = keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || keys['jump'];
-        if (jumpKey && player.onGround) {
-            player.vy = JUMP_FORCE;
-            player.onGround = false;
-            player.jumping = true;
-            for (let i = 0; i < 6; i++) {
-                particles.push({
-                    x: player.x + player.w/2 + (Math.random() - 0.5) * 20,
-                    y: player.y + player.h,
-                    vx: (Math.random() - 0.5) * 2.5,
-                    vy: -Math.random() * 2.5,
-                    life: 0.5 + Math.random() * 0.3,
-                    color: 'rgba(200,200,255,0.4)',
-                    size: 3 + Math.random() * 3
-                });
-            }
+
+    }
+
+
+    /* BORDE IZQUIERDO */
+
+    if(
+        player.x<0
+    ){
+
+        player.x=0;
+        player.vx=0;
+
+    }
+
+
+    /* TEMPORIZADORES */
+
+    if(
+        player.invincible>0
+    ){
+
+        player.invincible--;
+
+    }
+
+    if(
+        player.shotCooldown>0
+    ){
+
+        player.shotCooldown--;
+
+    }
+
+    if(
+        player.specialCooldown > 0
+    ){
+
+        player.specialCooldown--;
+
+    }
+
+    if(
+        player.powerTimer>0
+    ){
+
+        player.powerTimer--;
+
+        if(
+            player.powerTimer<=0
+        ){
+
+            player.power=null;
+
         }
-        
-        if (player.jumping && !jumpKey) {
-            if (player.vy < -3) player.vy = -3;
-            player.jumping = false;
+
+    }
+
+
+    /* CAÍDA */
+
+    if(
+        player.y >
+        HEIGHT+200
+    ){
+
+        hurtPlayer();
+
+    }
+
+
+    /* ANIMACIÓN */
+
+    player.animation +=
+        Math.abs(player.vx)*.12;
+
+
+    /* ENEMIGOS MEJORADOS */
+
+    for(
+        const enemy of enemies
+    ){
+
+        if(
+            !enemy.alive
+        )continue;
+
+        if(enemy.frozen > 0) {
+            enemy.frozen--;
+            continue;
         }
-        
-        // Animación
-        if (Math.abs(player.vx) > 0.5 && player.onGround) {
-            player.walkTimer += Math.abs(player.vx) * 0.05;
-            if (player.walkTimer > 1) {
-                player.walkTimer = 0;
-                player.walkFrame = (player.walkFrame + 1) % 4;
-            }
-        } else if (player.onGround) {
-            player.walkFrame = 0;
-            player.walkTimer = 0;
-        }
-        
-        if (moveX > 0) player.facing = 1;
-        else if (moveX < 0) player.facing = -1;
-        
-        if (!player.onGround) {
-            player.armAngle += 0.08;
-        } else if (Math.abs(player.vx) > 0.5) {
-            player.armAngle += 0.05 * Math.sign(player.vx);
-        }
-        
-        // Movimiento horizontal
-        player.x += player.vx;
-        
-        // Limitar al nivel
-        if (player.x < 0) player.x = 0;
-        if (player.x + player.w > LEVEL_WIDTH) player.x = LEVEL_WIDTH - player.w;
-        
-        // Actualizar cámara
-        cameraX = Math.max(0, Math.min(player.x - W * 0.3, LEVEL_WIDTH - W));
-        
-        for (const p of level.platforms) {
-            let px = p.x, py = p.y;
-            const movingIdx = level.movingPlatforms.indexOf(p);
-            if (movingIdx !== -1) {
-                const state = levelState.movingPlatforms.find(s => s.index === movingIdx);
-                if (state) {
-                    px = state.origX + Math.sin(state.timer * p.speed + state.phase) * (p.moveX || 0);
+
+        switch(enemy.type) {
+
+            case "walker":
+                enemy.x += enemy.vx;
+                if(
+                    enemy.x < enemy.origin-enemy.range ||
+                    enemy.x > enemy.origin+enemy.range
+                ) {
+                    enemy.vx *= -1;
                 }
-            }
-            const fallingIdx = level.fallingPlatforms.indexOf(p);
-            if (fallingIdx !== -1) {
-                const state = levelState.fallingPlatforms.find(s => s.index === fallingIdx);
-                if (state && state.falling) {
-                    py = state.origY + state.fallSpeed;
+                break;
+
+            case "flyer":
+                enemy.x += enemy.vx;
+                enemy.y += Math.sin(levelTime/30 + enemy.origin) * 0.5;
+                if(
+                    enemy.x < enemy.origin-enemy.range ||
+                    enemy.x > enemy.origin+enemy.range
+                ) {
+                    enemy.vx *= -1;
                 }
-            }
-            
-            if (rectCollide(player, {x: px, y: py, w: p.w, h: p.h})) {
-                if (player.vx > 0) {
-                    player.x = px - player.w;
-                } else if (player.vx < 0) {
-                    player.x = px + p.w;
-                }
-                player.vx = 0;
-            }
-        }
-        
-        // Movimiento vertical
-        player.y += player.vy;
-        player.onGround = false;
-        
-        for (const p of level.platforms) {
-            let px = p.x, py = p.y;
-            const movingIdx = level.movingPlatforms.indexOf(p);
-            if (movingIdx !== -1) {
-                const state = levelState.movingPlatforms.find(s => s.index === movingIdx);
-                if (state) {
-                    px = state.origX + Math.sin(state.timer * p.speed + state.phase) * (p.moveX || 0);
-                }
-            }
-            const fallingIdx = level.fallingPlatforms.indexOf(p);
-            if (fallingIdx !== -1) {
-                const state = levelState.fallingPlatforms.find(s => s.index === fallingIdx);
-                if (state && state.falling) {
-                    py = state.origY + state.fallSpeed;
-                }
-            }
-            
-            if (rectCollide(player, {x: px, y: py, w: p.w, h: p.h})) {
-                if (player.vy > 0) {
-                    player.y = py - player.h;
-                    player.vy = 0;
-                    player.onGround = true;
-                    
-                    // Plataformas elásticas
-                    if (p.type === 'bouncy') {
-                        player.vy = JUMP_FORCE * 1.5;
-                    }
-                } else if (player.vy < 0) {
-                    player.y = py + p.h;
-                    player.vy = 0;
-                }
-            }
-        }
-        
-        // Actualizar plataformas móviles
-        for (const state of levelState.movingPlatforms) {
-            state.timer += 0.025;
-        }
-        
-        // Actualizar plataformas que caen
-        for (const state of levelState.fallingPlatforms) {
-            const p = level.platforms[level.platforms.indexOf(level.fallingPlatforms[state.index])];
-            if (!p) continue;
-            
-            if (state.falling) {
-                state.fallSpeed += 0.4;
-                if (state.fallSpeed > 12) state.fallSpeed = 12;
-                state.resetTimer++;
-                if (state.resetTimer > 100) {
-                    state.falling = false;
-                    state.fallSpeed = 0;
-                    state.resetTimer = 0;
-                }
-            } else {
-                state.timer++;
-                if (state.timer > (p.fallDelay || 50)) {
-                    const px = p.x;
-                    const py = p.y;
-                    if (player.x + player.w > px && player.x < px + p.w &&
-                        player.y + player.h >= py && player.y + player.h <= py + p.h + 5) {
-                        state.falling = true;
-                        state.timer = 0;
-                    }
-                }
-            }
-        }
-        
-        // Actualizar obstáculos rotatorios
-        for (const obstacle of level.rotatingObstacles) {
-            obstacle.angle += obstacle.speed;
-            
-            // Colisión con el jugador
-            if (!player.invincible) {
-                const dx = player.x + player.w/2 - obstacle.x;
-                const dy = player.y + player.h/2 - obstacle.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < obstacle.radius + player.w/2) {
-                    playerHit();
-                }
-            }
-        }
-        
-        // Actualizar enemigos
-        for (let i = 0; i < level.enemies.length; i++) {
-            const enemy = level.enemies[i];
-            const state = levelState.enemyStates[i];
-            if (!state) continue;
-            
-            state.timer += 0.02;
-            enemy.x = state.origX + Math.sin(state.timer) * enemy.range;
-            
-            if (!player.invincible && rectCollide(player, enemy)) {
-                playerHit();
-            }
-        }
-        
-        // Recoger coleccionables
-        for (const collectible of level.collectibles) {
-            if (!collectible.collected && rectCollide(player, collectible)) {
-                collectible.collected = true;
-                comboCount += 0.5;
-                for (let i = 0; i < 20; i++) {
-                    particles.push({
-                        x: collectible.x + collectible.w/2,
-                        y: collectible.y + collectible.h/2,
-                        vx: (Math.random() - 0.5) * 6,
-                        vy: (Math.random() - 0.5) * 6 - 2,
-                        life: 0.8 + Math.random() * 0.4,
-                        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-                        size: 4 + Math.random() * 4
+                break;
+
+            case "shooter":
+                enemy.shootTimer--;
+                if(enemy.shootTimer <= 0) {
+                    enemy.shootTimer = 150;
+                    projectiles.push({
+                        x: enemy.x,
+                        y: enemy.y+20,
+                        vx: (player.x < enemy.x ? -1 : 1) * 6,
+                        radius: 6,
+                        damage: 1,
+                        type: "enemy"
                     });
                 }
-                showMessage('💰 +1 Moneda', 500);
-            }
-        }
-        
-        // Activar checkpoints
-        for (const checkpoint of level.checkpoints) {
-            if (!checkpoint.activated && rectCollide(player, checkpoint)) {
-                checkpoint.activated = true;
-                level.playerStart.x = checkpoint.x;
-                level.playerStart.y = checkpoint.y;
-                showMessage('💾 ¡Checkpoint Activado!', 1000);
-            }
-        }
-        
-        // Colisiones con púas fijas
-        if (!player.invincible) {
-            for (const spike of level.spikes) {
-                if (rectCollide(player, spike)) {
-                    playerHit();
-                    break;
+                break;
+
+            case "tank":
+                enemy.x += enemy.vx * 0.5;
+                if(
+                    enemy.x < enemy.origin-enemy.range ||
+                    enemy.x > enemy.origin+enemy.range
+                ) {
+                    enemy.vx *= -1;
                 }
-            }
-            
-            // Colisiones con trampas activas
-            for (let i = 0; i < level.traps.length; i++) {
-                const trap = level.traps[i];
-                if (!trap.active) continue;
-                
-                levelState.trapTimers[i] = (levelState.trapTimers[i] || 0) + 0.025;
-                const timer = levelState.trapTimers[i];
-                
-                let active = false;
-                if (trap.pattern === 'pulse') {
-                    active = Math.sin(timer * 3 * trap.speed) > 0.15;
-                } else if (trap.pattern === 'sweep') {
-                    const phase = trap.phase || 0;
-                    active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.25;
-                }
-                
-                if (active) {
-                    let trapRect = {...trap};
-                    if (trap.type === 'laser') {
-                        trapRect.h = 10;
-                        trapRect.y += 12;
-                        trapRect.w = trap.w + 10;
-                    }
-                    if (rectCollide(player, trapRect)) {
-                        playerHit();
-                        break;
-                    }
-                }
-            }
+                break;
         }
-        
-        // COLISIÓN CON LA META
-        if (!levelTransitioning) {
-            const goal = level.goal;
-            const detectionPadding = 10;
-            
-            const playerRect = {
-                x: player.x - detectionPadding,
-                y: player.y - detectionPadding,
-                w: player.w + detectionPadding * 2,
-                h: player.h + detectionPadding * 2
+
+        if(
+            collision(
+                player,
+                enemy
+            )
+        ){
+
+            if(
+                player.vy>0 &&
+
+                player.y+
+                player.height <
+                enemy.y+
+                enemy.height*.6
+            ){
+
+                enemy.hp--;
+
+                player.vy =
+                    -9;
+
+                score += 100;
+
+                if(
+                    enemy.hp<=0
+                ){
+
+                    enemy.alive=false;
+
+                    score+=150;
+
+                    createParticles(
+                        enemy.x+20,
+                        enemy.y+20,
+                        14,
+                        enemy.color
+                    );
+
+                }
+
+            }else{
+
+                hurtPlayer();
+
+            }
+
+        }
+
+    }
+
+
+    /* PROYECTILES */
+
+    for(
+        let i=
+        projectiles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const shot =
+            projectiles[i];
+
+        shot.x +=
+            shot.vx;
+
+
+        let remove =
+            false;
+
+
+        for(
+            const enemy of enemies
+        ){
+
+            if(
+                !enemy.alive
+            )continue;
+
+
+            const shotBox = {
+
+                x:
+                    shot.x-
+                    shot.radius,
+
+                y:
+                    shot.y-
+                    shot.radius,
+
+                width:
+                    shot.radius*2,
+
+                height:
+                    shot.radius*2
+
             };
-            
-            const goalRect = {
-                x: goal.x - detectionPadding,
-                y: goal.y - detectionPadding,
-                w: goal.w + detectionPadding * 2,
-                h: goal.h + detectionPadding * 2
-            };
-            
-            if (rectCollide(playerRect, goalRect)) {
-                levelTransitioning = true;
-                levelComplete = true;
-                
-                const levelNum = currentLevelInWorld + 1;
-                const worldNum = currentWorld + 1;
-                
-                comboCount++;
-                let bonusMsg = '';
-                if (comboCount >= 5) bonusMsg = ' 🔥 ¡Racha de 5!';
-                if (comboCount >= 10) bonusMsg = ' ⚡ ¡Racha de 10!';
-                if (comboCount >= 20) bonusMsg = ' 🌟 ¡Racha de 20!';
-                
-                for (let i = 0; i < 50; i++) {
-                    particles.push({
-                        x: goal.x + goal.w/2 + (Math.random() - 0.5) * 50,
-                        y: goal.y + goal.h/2 + (Math.random() - 0.5) * 50,
-                        vx: (Math.random() - 0.5) * 16,
-                        vy: (Math.random() - 0.5) * 16 - 6,
-                        life: 1 + Math.random() * 0.6,
-                        color: `hsl(${Math.random() * 60 + 20}, 100%, 60%)`,
-                        size: 4 + Math.random() * 8
-                    });
+
+
+            if(
+                collision(
+                    shotBox,
+                    enemy
+                )
+            ){
+
+                if(shot.type !== "enemy") {
+                    enemy.hp -=
+                        shot.damage;
+
+                    createParticles(
+                        shot.x,
+                        shot.y,
+                        7,
+                        shot.type === "fireball" ? "#ff4500" :
+                        shot.type === "laser" ? "#00ffff" :
+                        shot.type === "thunder" ? "#ffff00" :
+                        "#ff7137"
+                    );
+
+                    if(
+                        enemy.hp<=0
+                    ){
+
+                        enemy.alive=false;
+
+                        score+=200;
+
+                    }
                 }
-                
-                let nextWorld = currentWorld;
-                let nextLevel = currentLevelInWorld + 1;
-                
-                if (nextLevel >= LEVELS_PER_WORLD) {
-                    nextLevel = 0;
-                    nextWorld = currentWorld + 1;
-                }
-                
-                if (nextWorld >= TOTAL_WORLDS) {
-                    showMessage(`🎉 ¡JUEGO COMPLETADO! 🎉\nMundo ${worldNum} - Nivel ${levelNum}${bonusMsg}`, 5000);
-                    gameRunning = false;
-                    updateUI();
-                    return;
-                }
-                
-                const nextStars = levels[nextWorld * LEVELS_PER_WORLD + nextLevel]?.starRating || 1;
-                const starsStr = '⭐'.repeat(Math.min(5, nextStars));
-                
-                if (currentLevelInWorld >= LEVELS_PER_WORLD - 1) {
-                    showMessage(`🌟 ¡Mundo ${worldNum} Completado! 🌟\nPasando al Mundo ${nextWorld + 1}\n${starsStr} ${bonusMsg}`, 2500);
-                } else {
-                    showMessage(`✅ ¡Nivel ${levelNum} Completado! ${starsStr}${bonusMsg}`, 1500);
-                }
-                
-                updateUI();
-                
-                const delay = currentLevelInWorld >= LEVELS_PER_WORLD - 1 ? 2500 : 1500;
-                setTimeout(() => {
-                    currentWorld = nextWorld;
-                    currentLevelInWorld = nextLevel;
-                    hearts = MAX_HEARTS;
-                    levelTransitioning = false;
-                    initLevel();
-                    gameRunning = true;
-                }, delay);
-                
-                return;
+
+                remove=true;
+
+                break;
+
             }
+
         }
-        
-        // Caer al vacío
-        if (player.y > H + 100) {
-            playerDie();
-        }
-        
-        updateParticles();
-        updateUI();
-    }
-    
-    // ================================================================
-    //  GOLPE AL JUGADOR
-    // ================================================================
-    function playerHit() {
-        if (player.invincible || deathAnimation || levelTransitioning) return;
-        
-        hearts--;
-        player.invincible = true;
-        player.invincibleTimer = 60;
-        player.hurtTimer = 10;
-        
-        for (let i = 0; i < 15; i++) {
-            particles.push({
-                x: player.x + player.w/2,
-                y: player.y + player.h/2,
-                vx: (Math.random() - 0.5) * 6,
-                vy: (Math.random() - 0.5) * 6 - 2,
-                life: 0.5 + Math.random() * 0.5,
-                color: `hsl(${Math.random() * 40 + 340}, 100%, 60%)`,
-                size: 3 + Math.random() * 5
-            });
-        }
-        
-        if (hearts <= 0) {
-            playerDie();
-        } else {
-            showMessage(`💔 ¡Te hirieron! ${hearts} ❤️ restantes`, 1000);
-            updateUI();
-        }
-    }
-    
-    // ================================================================
-    //  MUERTE DEL JUGADOR
-    // ================================================================
-    function playerDie() {
-        if (deathAnimation || levelTransitioning) return;
-        
-        deathAnimation = true;
-        totalDeaths++;
-        comboCount = 0;
-        
-        for (let i = 0; i < 40; i++) {
-            particles.push({
-                x: player.x + player.w/2,
-                y: player.y + player.h/2,
-                vx: (Math.random() - 0.5) * 10,
-                vy: (Math.random() - 0.5) * 10 - 3,
-                life: 0.8 + Math.random() * 0.5,
-                color: `hsl(${Math.random() * 60 + 340}, 100%, 50%)`,
-                size: 4 + Math.random() * 6
-            });
-        }
-        
-        hearts = MAX_HEARTS;
-        updateUI();
-        showMessage(`💀 ¡Has muerto! (${totalDeaths} muertes)`, 1500);
-        
-        setTimeout(() => {
-            const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
-            const level = levels[levelIndex];
-            if (level) {
-                player.x = level.playerStart.x || 50;
-                player.y = level.playerStart.y || 470;
-                player.vx = 0;
-                player.vy = 0;
-                player.onGround = false;
-                player.invincible = true;
-                player.invincibleTimer = 90;
-            }
-            deathAnimation = false;
-            gameRunning = true;
-            updateUI();
-        }, 800);
-    }
-    
-    // ================================================================
-    //  PARTÍCULAS
-    // ================================================================
-    function updateParticles() {
-        for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.08;
-            p.life -= 0.015;
-            if (p.life <= 0) {
-                particles.splice(i, 1);
-            }
-        }
-    }
-    
-    // ================================================================
-    //  DIBUJO
-    // ================================================================
-    function draw() {
-        const levelIndex = currentWorld * LEVELS_PER_WORLD + currentLevelInWorld;
-        const level = levels[levelIndex];
-        if (!level) {
-            ctx.fillStyle = '#0a0a1a';
-            ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = '#fff';
-            ctx.font = '24px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('Cargando niveles...', W/2, H/2);
-            return;
-        }
-        
-        ctx.clearRect(0, 0, W, H);
-        
-        // Aplicar transformación de cámara
-        ctx.save();
-        ctx.translate(-cameraX, 0);
-        
-        drawBackground(level);
-        
-        // Plataformas
-        for (let i = 0; i < level.platforms.length; i++) {
-            const p = level.platforms[i];
-            if (p.x > cameraX + W + 100 || p.x + p.w < cameraX - 100) continue;
-            
-            let px = p.x, py = p.y;
-            
-            const movingIdx = level.movingPlatforms.indexOf(p);
-            if (movingIdx !== -1) {
-                const state = levelState.movingPlatforms.find(s => s.index === movingIdx);
-                if (state) {
-                    px = state.origX + Math.sin(state.timer * p.speed + state.phase) * (p.moveX || 0);
-                }
-            }
-            const fallingIdx = level.fallingPlatforms.indexOf(p);
-            if (fallingIdx !== -1) {
-                const state = levelState.fallingPlatforms.find(s => s.index === fallingIdx);
-                if (state && state.falling) {
-                    py = state.origY + state.fallSpeed;
-                    ctx.shadowColor = 'rgba(255,50,50,0.4)';
-                    ctx.shadowBlur = 20;
-                }
-            }
-            
-            let color = level.theme.platformColor || '#4a6fa5';
-            if (p.type === 'moving') {
-                color = '#6bcb77';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'rgba(100,255,150,0.3)';
-            } else if (p.type === 'falling') {
-                color = '#ff6b6b';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'rgba(255,50,50,0.3)';
-            } else if (p.type === 'bouncy') {
-                color = '#fbbf24';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'rgba(255,200,50,0.4)';
-            } else {
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = 'rgba(100,150,255,0.2)';
-            }
-            
-            const grad = ctx.createLinearGradient(px, py, px, py + p.h);
-            grad.addColorStop(0, color);
-            grad.addColorStop(1, darkenColor(color, 0.4));
-            ctx.fillStyle = grad;
-            ctx.fillRect(px, py, p.w, p.h);
-            ctx.shadowBlur = 0;
-            
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(px, py, p.w, p.h);
-            
-            if (p.type === 'moving') {
-                ctx.fillStyle = 'rgba(255,255,255,0.1)';
-                ctx.fillRect(px + 5, py + 3, p.w - 10, 4);
-            } else if (p.type === 'bouncy') {
-                ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                ctx.fillRect(px + 5, py + 3, p.w - 10, 4);
-            }
-        }
-        
-        // Púas fijas
-        for (const spike of level.spikes) {
-            if (spike.x > cameraX + W + 50 || spike.x < cameraX - 50) continue;
-            drawSpike(spike.x, spike.y, spike.w, spike.h);
-        }
-        
-        // Trampas activas
-        for (let i = 0; i < level.traps.length; i++) {
-            const trap = level.traps[i];
-            if (trap.x > cameraX + W + 50 || trap.x < cameraX - 50) continue;
-            if (!trap.active) continue;
-            
-            const timer = levelState.trapTimers[i] || 0;
-            let active = false;
-            
-            if (trap.pattern === 'pulse') {
-                active = Math.sin(timer * 3 * trap.speed) > 0.15;
-            } else if (trap.pattern === 'sweep') {
-                const phase = trap.phase || 0;
-                active = Math.sin(timer * 2 * trap.speed + phase * Math.PI * 2) > 0.25;
-            }
-            
-            if (trap.type === 'spike' && active) {
-                drawSpike(trap.x, trap.y, trap.w, trap.h);
-            } else if (trap.type === 'laser' && active) {
-                const grad = ctx.createLinearGradient(trap.x, trap.y + 12, trap.x + trap.w, trap.y + 12);
-                grad.addColorStop(0, 'rgba(255,0,0,0)');
-                grad.addColorStop(0.1, 'rgba(255,0,0,0.9)');
-                grad.addColorStop(0.5, 'rgba(255,200,50,0.9)');
-                grad.addColorStop(0.9, 'rgba(255,0,0,0.9)');
-                grad.addColorStop(1, 'rgba(255,0,0,0)');
-                ctx.fillStyle = grad;
-                ctx.shadowBlur = 30;
-                ctx.shadowColor = 'rgba(255,50,0,0.8)';
-                ctx.fillRect(trap.x, trap.y + 12, trap.w + 10, 8);
-                ctx.shadowBlur = 0;
-            }
-        }
-        
-        // Obstáculos rotatorios
-        for (const obstacle of level.rotatingObstacles) {
-            if (obstacle.x > cameraX + W + 100 || obstacle.x < cameraX - 100) continue;
-            
-            ctx.save();
-            ctx.translate(obstacle.x, obstacle.y);
-            ctx.rotate(obstacle.angle);
-            
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = 'rgba(255,100,0,0.5)';
-            ctx.fillStyle = '#ff6b35';
-            ctx.fillRect(-obstacle.radius, -5, obstacle.radius * 2, 10);
-            ctx.fillStyle = '#ff4757';
-            ctx.beginPath();
-            ctx.arc(obstacle.radius, 0, 10, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(-obstacle.radius, 0, 10, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            
-            ctx.restore();
-        }
-        
-        // Enemigos
-        for (const enemy of level.enemies) {
-            if (enemy.x > cameraX + W + 50 || enemy.x < cameraX - 50) continue;
-            
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = 'rgba(255,0,0,0.4)';
-            ctx.fillStyle = '#ff4757';
-            ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
-            
-            // Ojos
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(enemy.x + 5, enemy.y + 5, 6, 6);
-            ctx.fillRect(enemy.x + enemy.w - 11, enemy.y + 5, 6, 6);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(enemy.x + 7, enemy.y + 7, 3, 3);
-            ctx.fillRect(enemy.x + enemy.w - 9, enemy.y + 7, 3, 3);
-            
-            ctx.shadowBlur = 0;
-        }
-        
-        // Coleccionables
-        for (const collectible of level.collectibles) {
-            if (collectible.collected) continue;
-            if (collectible.x > cameraX + W + 50 || collectible.x < cameraX - 50) continue;
-            
-            const pulse = Math.sin(frameCount * 0.1) * 3;
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = 'rgba(255,215,0,0.6)';
-            ctx.fillStyle = '#ffd93d';
-            ctx.beginPath();
-            ctx.arc(collectible.x + collectible.w/2, collectible.y + collectible.h/2 + pulse, 10, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(collectible.x + collectible.w/2, collectible.y + collectible.h/2 + pulse, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-        
-        // Checkpoints
-        for (const checkpoint of level.checkpoints) {
-            if (checkpoint.x > cameraX + W + 50 || checkpoint.x < cameraX - 50) continue;
-            
-            const color = checkpoint.activated ? '#4fc3f7' : '#666';
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = checkpoint.activated ? 'rgba(79,195,247,0.6)' : 'rgba(100,100,100,0.3)';
-            ctx.fillStyle = color;
-            ctx.fillRect(checkpoint.x, checkpoint.y, checkpoint.w, checkpoint.h);
-            
-            // Bandera
-            ctx.fillStyle = checkpoint.activated ? '#4fc3f7' : '#888';
-            ctx.fillRect(checkpoint.x + checkpoint.w/2 - 2, checkpoint.y - 30, 4, 30);
-            ctx.fillStyle = checkpoint.activated ? '#fff' : '#aaa';
-            ctx.beginPath();
-            ctx.moveTo(checkpoint.x + checkpoint.w/2 + 2, checkpoint.y - 30);
-            ctx.lineTo(checkpoint.x + checkpoint.w/2 + 20, checkpoint.y - 25);
-            ctx.lineTo(checkpoint.x + checkpoint.w/2 + 2, checkpoint.y - 20);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-        
-        // Meta
-        const goal = level.goal;
-        if (goal.x > cameraX - 100 && goal.x < cameraX + W + 100) {
-            const pulse = Math.sin(frameCount * 0.06) * 0.3 + 0.7;
-            ctx.shadowBlur = 30;
-            ctx.shadowColor = `rgba(255,215,0,${0.3 * pulse})`;
-            
-            ctx.fillStyle = `rgba(255,215,0,${0.15 * pulse})`;
-            ctx.fillRect(goal.x - 15, goal.y - 15, goal.w + 30, goal.h + 30);
-            
-            const grad = ctx.createLinearGradient(goal.x, goal.y, goal.x, goal.y + goal.h);
-            grad.addColorStop(0, '#ffd93d');
-            grad.addColorStop(0.5, '#f9ca24');
-            grad.addColorStop(1, '#f0932b');
-            ctx.fillStyle = grad;
-            ctx.shadowBlur = 30;
-            ctx.shadowColor = `rgba(255,215,0,${0.5 * pulse})`;
-            ctx.fillRect(goal.x, goal.y, goal.w, goal.h);
-            
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#fff';
-            ctx.font = '28px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('⭐', goal.x + goal.w/2, goal.y + goal.h/2 + 2);
-        }
-        
-        // Jugador
-        drawPlayer();
-        
-        // Partículas
-        for (const p of particles) {
-            ctx.globalAlpha = Math.max(0, p.life);
-            ctx.fillStyle = p.color;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = p.color;
-            ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
-        }
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-        
-        ctx.restore();
-        
-        // Efectos especiales (sin cámara)
-        if (level.darkMode) {
-            ctx.fillStyle = 'rgba(0,0,0,0.35)';
-            ctx.fillRect(0, 0, W, H);
-            const grad2 = ctx.createRadialGradient(
-                player.x - cameraX + player.w/2, player.y + player.h/2, 20,
-                player.x - cameraX + player.w/2, player.y + player.h/2, 200
+
+
+        if(
+            remove ||
+            shot.x<
+            cameraX-300 ||
+            shot.x>
+            cameraX+
+            WIDTH+500
+        ){
+
+            projectiles.splice(
+                i,
+                1
             );
-            grad2.addColorStop(0, 'rgba(255,255,255,0)');
-            grad2.addColorStop(1, 'rgba(0,0,0,0.5)');
-            ctx.fillStyle = grad2;
-            ctx.fillRect(0, 0, W, H);
+
         }
-        
-        if (level.fireParticles && Math.random() < 0.1) {
-            particles.push({
-                x: cameraX + Math.random() * W,
-                y: H - 5,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: -Math.random() * 1.5 - 0.5,
-                life: 0.8 + Math.random() * 0.5,
-                color: `hsl(${20 + Math.random() * 30}, 100%, ${40 + Math.random() * 30}%)`,
-                size: 3 + Math.random() * 6
-            });
+
+    }
+
+
+    /* MONEDAS */
+
+    for(
+        const coin of collectibles
+    ){
+
+        if(
+            coin.collected
+        )continue;
+
+
+        const dx =
+            player.x+
+            player.width/2-
+            coin.x;
+
+        const dy =
+            player.y+
+            player.height/2-
+            coin.y;
+
+
+        if(
+            Math.sqrt(
+                dx*dx+
+                dy*dy
+            )<35
+        ){
+
+            coin.collected =
+                true;
+
+            coins++;
+
+            score+=50;
+
+            save.totalCoins += 1;
+
+            createParticles(
+                coin.x,
+                coin.y,
+                8,
+                "#ffd447"
+            );
+
         }
-        
-        if (player.hurtTimer > 0) {
-            player.hurtTimer--;
-            ctx.fillStyle = `rgba(255,0,0,${player.hurtTimer / 20})`;
-            ctx.fillRect(0, 0, W, H);
+
+    }
+
+
+    /* PODERES */
+
+    for(
+        const power of powerups
+    ){
+
+        if(
+            power.collected
+        )continue;
+
+
+        if(
+            collision(
+                player,
+                power
+            )
+        ){
+
+            power.collected =
+                true;
+
+            player.power =
+                power.type;
+
+            player.powerTimer =
+                600;
+
+            score+=100;
+
+            createParticles(
+                power.x,
+                power.y,
+                12,
+                "#ffffff"
+            );
+
+        }
+
+    }
+
+
+    /* TRAMPAS */
+
+    for(
+        const hazard of hazards
+    ){
+
+        if(
+            collision(
+                player,
+                hazard
+            )
+        ){
+
+            hurtPlayer();
+
+        }
+
+    }
+
+
+    /* META */
+
+    if(
+        collision(
+            player,
+            goal
+        )
+    ){
+
+        finishLevel();
+
+    }
+
+
+    /* CÁMARA */
+
+    const targetCamera =
+        player.x-
+        WIDTH*.35;
+
+
+    cameraX +=
+        (
+            targetCamera-
+            cameraX
+        )*.12;
+
+
+    const maximumCamera =
+        Math.max(
+            0,
+            goal.x-
+            WIDTH+
+            120
+        );
+
+
+    cameraX =
+        clamp(
+            cameraX,
+            0,
+            maximumCamera
+        );
+
+
+    /* PARTÍCULAS AMBIENTALES */
+
+    updateAmbientParticles();
+
+    updateParticles();
+
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS AMBIENTALES
+========================================================= */
+
+function updateAmbientParticles() {
+
+    const world = worlds[currentWorld-1];
+
+    if(Math.random() < 0.3) {
+
+        const type = world.ambientParticles;
+
+        switch(type) {
+
+            case "leaves":
+                ambientParticles.push({
+                    x: cameraX + Math.random()*WIDTH,
+                    y: -10,
+                    vx: (Math.random()-0.5)*2,
+                    vy: Math.random()*2+1,
+                    type: "leaf",
+                    life: 200,
+                    size: Math.random()*3+2,
+                    color: "#8B4513"
+                });
+                break;
+
+            case "sand":
+                ambientParticles.push({
+                    x: cameraX + Math.random()*WIDTH,
+                    y: -10,
+                    vx: (Math.random()-0.5)*3,
+                    vy: Math.random()*1.5+0.5,
+                    type: "sand",
+                    life: 150,
+                    size: Math.random()*2+1,
+                    color: "#DAA520"
+                });
+                break;
+
+            case "snow":
+                ambientParticles.push({
+                    x: cameraX + Math.random()*WIDTH,
+                    y: -10,
+                    vx: (Math.random()-0.5)*1,
+                    vy: Math.random()*2+1,
+                    type: "snow",
+                    life: 250,
+                    size: Math.random()*4+2,
+                    color: "#FFFFFF"
+                });
+                break;
+
+            case "embers":
+                ambientParticles.push({
+                    x: cameraX + Math.random()*WIDTH,
+                    y: HEIGHT + 10,
+                    vx: (Math.random()-0.5)*2,
+                    vy: -Math.random()*3-1,
+                    type: "ember",
+                    life: 100,
+                    size: Math.random()*3+2,
+                    color: "#FF4500"
+                });
+                break;
+
+            case "mist":
+                ambientParticles.push({
+                    x: cameraX + Math.random()*WIDTH,
+                    y: HEIGHT * 0.7,
+                    vx: (Math.random()-0.5)*1,
+                    vy: -Math.random()*0.5,
+                    type: "mist",
+                    life: 200,
+                    size: Math.random()*8+4,
+                    color: "#FFFFFF"
+                });
+                break;
         }
     }
-    
-    // ================================================================
-    //  DIBUJAR JUGADOR (sin cambios)
-    // ================================================================
-    function drawPlayer() {
-        const p = player;
-        if (p.invincible && Math.floor(frameCount / 4) % 2 === 0) return;
-        
-        const colors = colorMap[customization.color] || colorMap.blue;
-        const x = p.x, y = p.y, w = p.w, h = p.h, f = p.facing;
-        
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = 'rgba(79,195,247,0.3)';
-        
-        // Extra: Efectos
-        if (customization.extra === 'glow') {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = 'rgba(255,215,0,0.5)';
-        } else if (customization.extra === 'fire') {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = 'rgba(255,100,0,0.5)';
-        } else if (customization.extra === 'ice') {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = 'rgba(100,200,255,0.5)';
-        } else if (customization.extra === 'electric') {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = 'rgba(255,255,0,0.5)';
-        } else if (customization.extra === 'rainbow') {
-            const hue = (frameCount * 2) % 360;
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
-        } else if (customization.extra === 'shadow') {
-            ctx.shadowBlur = 30;
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        } else if (customization.extra === 'star') {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = 'rgba(255,215,0,0.6)';
+
+    for(let i=ambientParticles.length-1; i>=0; i--) {
+        const p = ambientParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        if(p.life <= 0 || p.y > HEIGHT + 50 || p.x < cameraX - 100 || p.x > cameraX + WIDTH + 100) {
+            ambientParticles.splice(i, 1);
         }
-        
-        // Cuerpo
-        const bodyGrad = ctx.createLinearGradient(x, y, x + w, y + h);
-        bodyGrad.addColorStop(0, colors.body);
-        bodyGrad.addColorStop(0.5, colors.body);
-        bodyGrad.addColorStop(1, colors.bodyDark);
-        ctx.fillStyle = bodyGrad;
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = 'rgba(79,195,247,0.3)';
-        roundRect(ctx, x + 2, y + 12, w - 4, h - 20, 6);
-        ctx.fill();
-        
-        // Cabeza
-        ctx.shadowBlur = 10;
-        ctx.fillStyle = colors.skin;
+    }
+}
+
+
+/* =========================================================
+   TERMINAR NIVEL
+========================================================= */
+
+function finishLevel(){
+
+    if(
+        gameState !== "playing"
+    )return;
+
+
+    gameState =
+        "result";
+
+
+    if(
+        !save.completed.includes(
+            currentLevel
+        )
+    ){
+
+        save.completed.push(
+            currentLevel
+        );
+
+    }
+
+
+    if(
+        currentLevel<5
+    ){
+
+        save.unlockedLevel =
+            Math.max(
+                save.unlockedLevel,
+                currentLevel+1
+            );
+
+    }
+
+
+    saveGame();
+
+
+    showResult(
+        currentLevel===5
+            ?"🏆 ¡GRAN VICTORIA!"
+            :"🏁 ¡NIVEL COMPLETADO!",
+        "Llegaste a la meta en " + Math.floor(levelTime/60) + " segundos.",
+        currentLevel<5
+    );
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+
+function createParticles(
+    x,
+    y,
+    amount,
+    color
+){
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        particles.push({
+
+            x:x,
+
+            y:y,
+
+            vx:
+                (Math.random()-.5)*6,
+
+            vy:
+                (Math.random()-.7)*6,
+
+            life:
+                20+
+                Math.random()*25,
+
+            color:color,
+
+            size: Math.random()*3+2
+
+        });
+
+    }
+
+}
+
+
+function updateParticles(){
+
+    for(
+        let i=
+        particles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p =
+            particles[i];
+
+        p.x += p.vx;
+
+        p.y += p.vy;
+
+        p.vy += .12;
+
+        p.life--;
+
+        if(
+            p.life<=0
+        ){
+
+            particles.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   DIBUJO DEL CIELO MEJORADO
+========================================================= */
+
+function drawBackground(){
+
+    const world =
+        worlds[
+            currentWorld-1
+        ];
+
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            HEIGHT
+        );
+
+
+    gradient.addColorStop(
+        0,
+        world.skyTop
+    );
+
+    gradient.addColorStop(
+        1,
+        world.skyBottom
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        WIDTH,
+        HEIGHT
+    );
+
+
+    /* montañas */
+
+    for(
+        let layer=0;
+        layer<3;
+        layer++
+    ){
+
+        const speed =
+            .08+
+            layer*.08;
+
+        const offset =
+            (cameraX*speed)%500;
+
+
+        ctx.fillStyle =
+            layer===0
+            ?world.mountain
+            :"rgba(255,255,255,.10)";
+
+
+        for(
+            let x=-600-offset;
+            x<WIDTH+600;
+            x+=500
+        ){
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x,
+                HEIGHT*.72
+            );
+
+            ctx.quadraticCurveTo(
+                x+120,
+                HEIGHT*.45+
+                layer*30,
+                x+250,
+                HEIGHT*.72
+            );
+
+            ctx.quadraticCurveTo(
+                x+380,
+                HEIGHT*.50+
+                layer*30,
+                x+500,
+                HEIGHT*.72
+            );
+
+            ctx.lineTo(
+                x+500,
+                HEIGHT
+            );
+
+            ctx.lineTo(
+                x,
+                HEIGHT
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }
+
+    }
+
+
+    /* nubes */
+
+    ctx.fillStyle =
+        "rgba(255,255,255,.65)";
+
+
+    for(
+        let x=
+            -(cameraX*.12%450)-100;
+        x<WIDTH+500;
+        x+=450
+    ){
+
         ctx.beginPath();
-        ctx.arc(x + w/2, y + 10, 14, 0, Math.PI * 2);
+
+        ctx.arc(
+            x,
+            HEIGHT*.18,
+            22,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+30,
+            HEIGHT*.17,
+            32,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+65,
+            HEIGHT*.2,
+            22,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
-        
-        // Ojos
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#fff';
+
+    }
+
+
+    /* decoración según mundo */
+
+    if(
+        currentWorld===1
+    ){
+
+        for(
+            let x=
+                -(cameraX*.3%240)-80;
+            x<WIDTH+300;
+            x+=240
+        ){
+
+            drawTree(
+                x,
+                HEIGHT*.63
+            );
+
+        }
+
+    }
+
+
+    if(
+        currentWorld===2
+    ){
+
+        for(
+            let x=
+                -(cameraX*.3%230)-60;
+            x<WIDTH+300;
+            x+=230
+        ){
+
+            drawCactus(
+                x,
+                HEIGHT*.63
+            );
+
+        }
+
+    }
+
+
+    if(
+        currentWorld===3
+    ){
+
+        for(
+            let x=
+                -(cameraX*.25%250)-60;
+            x<WIDTH+300;
+            x+=250
+        ){
+
+            drawPine(
+                x,
+                HEIGHT*.62
+            );
+
+        }
+
+    }
+
+
+    if(
+        currentWorld===4
+    ){
+
+        for(
+            let x=
+                -(cameraX*.2%500)-150;
+            x<WIDTH+600;
+            x+=500
+        ){
+
+            drawVolcano(
+                x,
+                HEIGHT*.72
+            );
+
+        }
+
+    }
+
+
+    if(
+        currentWorld===5
+    ){
+
+        for(
+            let x=
+                -(cameraX*.18%350)-100;
+            x<WIDTH+500;
+            x+=350
+        ){
+
+            drawTower(
+                x,
+                HEIGHT*.60
+            );
+
+        }
+
+    }
+
+
+    /* niebla */
+
+    if(world.fog) {
+
+        ctx.fillStyle = "rgba(255,255,255,.15)";
+        ctx.fillRect(0, HEIGHT*.6, WIDTH, HEIGHT*.4);
+
+    }
+
+
+    /* agua */
+
+    if(world.water) {
+
+        ctx.fillStyle = "rgba(0,100,200,.3)";
+        ctx.fillRect(0, HEIGHT*.85, WIDTH, HEIGHT*.15);
+
+    }
+
+}
+
+
+/* =========================================================
+   NATURALEZA MEJORADA
+========================================================= */
+
+function drawTree(
+    x,
+    y
+){
+
+    ctx.fillStyle =
+        "#65452d";
+
+    ctx.fillRect(
+        x-7,
+        y,
+        14,
+        75
+    );
+
+
+    ctx.fillStyle =
+        "#2d7545";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-15,
+        32,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x-25,
+        y,
+        24,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+25,
+        y,
+        25,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#4c9b55";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-8,
+        y-28,
+        13,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+}
+
+
+function drawCactus(
+    x,
+    y
+){
+
+    ctx.fillStyle =
+        "#4d914d";
+
+    ctx.fillRect(
+        x-7,
+        y,
+        14,
+        75
+    );
+
+    ctx.fillRect(
+        x-28,
+        y+22,
+        21,
+        11
+    );
+
+    ctx.fillRect(
+        x+7,
+        y+42,
+        21,
+        11
+    );
+
+}
+
+
+function drawPine(
+    x,
+    y
+){
+
+    ctx.fillStyle =
+        "#694b34";
+
+    ctx.fillRect(
+        x-5,
+        y,
+        10,
+        75
+    );
+
+    ctx.fillStyle =
+        "#6ba6b7";
+
+    for(
+        let i=0;
+        i<3;
+        i++
+    ){
+
         ctx.beginPath();
-        ctx.arc(x + w/2 - 5 + f * 3, y + 7, 5, 0, Math.PI * 2);
-        ctx.arc(x + w/2 + 5 + f * 3, y + 7, 5, 0, Math.PI * 2);
+
+        ctx.moveTo(
+            x,
+            y-55+i*25
+        );
+
+        ctx.lineTo(
+            x-35,
+            y+15+i*20
+        );
+
+        ctx.lineTo(
+            x+35,
+            y+15+i*20
+        );
+
+        ctx.closePath();
+
         ctx.fill();
-        
-        ctx.fillStyle = '#1a1a2e';
+
+    }
+
+}
+
+
+function drawVolcano(
+    x,
+    y
+){
+
+    ctx.fillStyle =
+        "#4d252a";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-180,
+        y+80
+    );
+
+    ctx.lineTo(
+        x,
+        y-180
+    );
+
+    ctx.lineTo(
+        x+180,
+        y+80
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#ff6538";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-155,
+        14,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+}
+
+
+function drawTower(
+    x,
+    y
+){
+
+    ctx.fillStyle =
+        "#272c3d";
+
+    ctx.fillRect(
+        x,
+        y,
+        90,
+        120
+    );
+
+    ctx.fillRect(
+        x-18,
+        y+30,
+        20,
+        90
+    );
+
+    ctx.fillRect(
+        x+88,
+        y+30,
+        20,
+        90
+    );
+
+
+    ctx.fillStyle =
+        "#ffd447";
+
+    ctx.fillRect(
+        x+37,
+        y+35,
+        16,
+        25
+    );
+
+}
+
+
+/* =========================================================
+   DIBUJAR NIVEL MEJORADO
+========================================================= */
+
+function drawLevel(){
+
+    const world =
+        worlds[
+            currentWorld-1
+        ];
+
+
+    /* plataformas */
+
+    for(
+        const platform of platforms
+    ){
+
+        const x =
+            platform.x-
+            cameraX;
+
+
+        if(
+            x+platform.width<0 ||
+            x>WIDTH
+        )continue;
+
+
+        /* sombra */
+
+        ctx.fillStyle =
+            "rgba(0,0,0,.18)";
+
+        ctx.fillRect(
+            x+5,
+            platform.y+8,
+            platform.width,
+            platform.height
+        );
+
+
+        /* tierra */
+
+        ctx.fillStyle =
+            world.dirt;
+
+        ctx.fillRect(
+            x,
+            platform.y,
+            platform.width,
+            platform.height
+        );
+
+
+        /* superficie */
+
+        ctx.fillStyle =
+            world.ground;
+
         ctx.beginPath();
-        ctx.arc(x + w/2 - 4 + f * 4, y + 8, 2.5, 0, Math.PI * 2);
-        ctx.arc(x + w/2 + 6 + f * 4, y + 8, 2.5, 0, Math.PI * 2);
+
+        ctx.moveTo(
+            x,
+            platform.y+13
+        );
+
+        ctx.quadraticCurveTo(
+            x+platform.width*.25,
+            platform.y-2,
+            x+platform.width*.5,
+            platform.y+9
+        );
+
+        ctx.quadraticCurveTo(
+            x+platform.width*.75,
+            platform.y-3,
+            x+platform.width,
+            platform.y+10
+        );
+
+        ctx.lineTo(
+            x+platform.width,
+            platform.y+27
+        );
+
+        ctx.lineTo(
+            x,
+            platform.y+27
+        );
+
+        ctx.closePath();
+
         ctx.fill();
-        
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+
+
+        /* detalles decorativos */
+
+        if(currentWorld === 1) {
+            // Hierba
+            ctx.fillStyle = "#228B22";
+            for(let i=0; i<platform.width; i+=20) {
+                ctx.fillRect(x+i, platform.y-3, 2, 6);
+            }
+        }
+
+    }
+
+
+    /* monedas */
+
+    for(
+        const coin of collectibles
+    ){
+
+        if(
+            coin.collected
+        )continue;
+
+
+        const x =
+            coin.x-
+            cameraX;
+
+        const bobY = Math.sin(levelTime/20 + coin.bobOffset) * 5;
+
+
+        ctx.fillStyle =
+            "#ffd447";
+
         ctx.beginPath();
-        ctx.arc(x + w/2 - 3 + f * 3, y + 6, 1.2, 0, Math.PI * 2);
-        ctx.arc(x + w/2 + 7 + f * 3, y + 6, 1.2, 0, Math.PI * 2);
+
+        ctx.ellipse(
+            x,
+            coin.y + bobY,
+            7,
+            11,
+            0,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
-        
-        // Sonrisa
-        ctx.strokeStyle = '#1a1a2e';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(x + w/2, y + 12, 5, 0.1, Math.PI - 0.1);
+
+
+        ctx.strokeStyle =
+            "#a97500";
+
         ctx.stroke();
-        
-        // Brazos
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        ctx.fillStyle = colors.skin;
-        
-        const armSwing = p.onGround ? Math.sin(p.walkFrame * Math.PI/2) * 6 : -3;
-        
-        ctx.save();
-        ctx.translate(x + 2, y + 16);
-        ctx.rotate(-0.3 + armSwing * 0.03 + (p.armAngle * 0.02));
-        ctx.fillRect(-2, 0, 5, 14);
-        ctx.fillStyle = colors.skin;
+
+    }
+
+
+    /* poderes */
+
+    for(
+        const power of powerups
+    ){
+
+        if(
+            power.collected
+        )continue;
+
+
+        const x =
+            power.x-
+            cameraX;
+
+        const bobY = Math.sin(levelTime/15) * 3;
+
+
+        ctx.fillStyle =
+            power.type==="shield"
+            ?"#ffd447"
+            :"#32dc73";
+
+
         ctx.beginPath();
-        ctx.arc(0, 14, 3, 0, Math.PI * 2);
+
+        ctx.arc(
+            x+12,
+            power.y+12 + bobY,
+            14,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
-        ctx.restore();
-        
-        ctx.fillStyle = colors.skin;
-        ctx.save();
-        ctx.translate(x + w - 2, y + 16);
-        ctx.rotate(0.3 - armSwing * 0.03 - (p.armAngle * 0.02));
-        ctx.fillRect(-2, 0, 5, 14);
-        ctx.fillStyle = colors.skin;
-        ctx.beginPath();
-        ctx.arc(0, 14, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-        
-        // Piernas
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        ctx.fillStyle = colors.bodyDark;
-        
-        const legOffset = p.onGround ? Math.sin(p.walkFrame * Math.PI/2) * 5 : Math.sin(frameCount * 0.15) * 3;
-        
-        ctx.fillRect(x + 4, y + h - 10, 6, 10 + legOffset);
-        ctx.fillRect(x + w - 10, y + h - 10, 6, 10 - legOffset);
-        
-        ctx.fillStyle = colors.accent;
-        ctx.fillRect(x + 2, y + h - 2 + legOffset, 10, 4);
-        ctx.fillRect(x + w - 12, y + h - 2 - legOffset, 10, 4);
-        
-        // Sombreros y accesorios (código existente...)
-        if (customization.hat !== 'none') {
-            ctx.shadowBlur = 5;
-            ctx.shadowColor = 'rgba(0,0,0,0.2)';
-            
-            if (customization.hat === 'cap') {
-                ctx.fillStyle = colors.accent;
-                ctx.fillRect(x + w/2 - 10, y - 4, 20, 6);
-                ctx.fillRect(x + w/2 + 4, y - 10, 10, 6);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(x + w/2 - 6, y - 2, 4, 3);
-            } else if (customization.hat === 'tophat') {
-                ctx.fillStyle = '#2d1b0e';
-                ctx.fillRect(x + w/2 - 10, y - 16, 20, 12);
-                ctx.fillRect(x + w/2 - 14, y - 4, 28, 4);
-                ctx.fillStyle = '#e94560';
-                ctx.fillRect(x + w/2 - 2, y - 16, 4, 2);
-            } else if (customization.hat === 'crown') {
-                ctx.fillStyle = '#fbbf24';
-                ctx.fillRect(x + w/2 - 12, y - 8, 24, 6);
-                for (let i = -8; i <= 8; i += 8) {
-                    ctx.fillRect(x + w/2 + i, y - 12, 4, 6);
-                    ctx.fillStyle = '#ef4444';
-                    ctx.fillRect(x + w/2 + i + 1, y - 14, 2, 3);
-                    ctx.fillStyle = '#fbbf24';
-                }
-            } else if (customization.hat === 'sombrero') {
-                ctx.fillStyle = '#d4a373';
-                ctx.fillRect(x + w/2 - 16, y - 2, 32, 4);
-                ctx.fillRect(x + w/2 - 8, y - 12, 16, 10);
-                ctx.fillStyle = '#f4a261';
-                ctx.fillRect(x + w/2 - 14, y - 2, 28, 2);
-            } else if (customization.hat === 'wizard') {
-                ctx.fillStyle = '#6c3a9e';
-                ctx.beginPath();
-                ctx.moveTo(x + w/2 - 12, y - 4);
-                ctx.lineTo(x + w/2, y - 28);
-                ctx.lineTo(x + w/2 + 12, y - 4);
-                ctx.fill();
-                ctx.fillStyle = '#fbbf24';
-                ctx.beginPath();
-                ctx.arc(x + w/2, y - 28, 4, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (customization.hat === 'santa') {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x + w/2 - 12, y - 4, 24, 8);
-                ctx.beginPath();
-                ctx.moveTo(x + w/2 - 12, y - 4);
-                ctx.lineTo(x + w/2, y - 18);
-                ctx.lineTo(x + w/2 + 12, y - 4);
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(x + w/2 - 14, y - 3, 28, 3);
-                ctx.beginPath();
-                ctx.arc(x + w/2, y - 18, 4, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (customization.hat === 'ninja') {
-                ctx.fillStyle = '#1a1a2e';
-                ctx.fillRect(x + w/2 - 14, y - 6, 28, 10);
-                ctx.fillRect(x + w/2 - 2, y - 14, 4, 8);
-                ctx.fillStyle = '#e94560';
-                ctx.fillRect(x + w/2 - 10, y - 4, 20, 2);
-            } else if (customization.hat === 'pirates') {
-                ctx.fillStyle = '#1a1a2e';
-                ctx.fillRect(x + w/2 - 12, y - 4, 24, 6);
-                ctx.beginPath();
-                ctx.moveTo(x + w/2 - 12, y - 4);
-                ctx.lineTo(x + w/2 - 6, y - 18);
-                ctx.lineTo(x + w/2, y - 8);
-                ctx.lineTo(x + w/2 + 6, y - 18);
-                ctx.lineTo(x + w/2 + 12, y - 4);
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(x + w/2 - 4, y - 18, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(x + w/2 + 4, y - 18, 3, 0, Math.PI * 2);
-                ctx.fill();
+
+
+        ctx.fillStyle =
+            "#111";
+
+        ctx.font =
+            "bold 12px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            power.type==="shield"
+                ?"S"
+                :"V",
+            x+12,
+            power.y+16 + bobY
+        );
+
+        ctx.textAlign =
+            "left";
+
+    }
+
+
+    /* trampas */
+
+    for(
+        const hazard of hazards
+    ){
+
+        const x =
+            hazard.x-
+            cameraX;
+
+
+        ctx.fillStyle =
+            currentWorld===4
+            ?" #ff5930"
+            :"#e8edf1";
+
+
+        if(
+            currentWorld===4
+        ){
+
+            ctx.fillStyle =
+                "#ff5a30";
+
+            ctx.fillRect(
+                x,
+                hazard.y,
+                hazard.width,
+                25
+            );
+
+            // Llamas
+            ctx.fillStyle = "#ffd447";
+            for(let i=0; i<5; i++) {
+                const flameHeight = Math.random()*10+5;
+                ctx.fillRect(x+i*10, hazard.y-flameHeight, 5, flameHeight);
             }
-        }
-        
-        // Accesorios (código existente...)
-        if (customization.accessory !== 'none') {
-            ctx.shadowBlur = 5;
-            ctx.shadowColor = 'rgba(0,0,0,0.2)';
-            
-            if (customization.accessory === 'scarf') {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(x + 2, y + 18, w - 4, 8);
-                ctx.fillRect(x - 6, y + 20, 8, 12);
-                ctx.fillRect(x + w - 2, y + 20, 8, 12);
-            } else if (customization.accessory === 'glasses') {
-                ctx.strokeStyle = '#2d1b0e';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(x + w/2 - 10, y + 4, 8, 6);
-                ctx.strokeRect(x + w/2 + 2, y + 4, 8, 6);
+
+        }else{
+
+            ctx.fillStyle =
+                "#e4ebef";
+
+            for(
+                let i=0;
+                i<5;
+                i++
+            ){
+
                 ctx.beginPath();
-                ctx.moveTo(x + w/2 - 2, y + 7);
-                ctx.lineTo(x + w/2 + 2, y + 7);
-                ctx.stroke();
-            } else if (customization.accessory === 'cape') {
-                ctx.fillStyle = 'rgba(233,69,96,0.35)';
-                ctx.fillRect(x - 10, y + 14, 8, 22);
-                ctx.fillRect(x + w + 2, y + 14, 8, 22);
-                ctx.fillStyle = 'rgba(233,69,96,0.2)';
-                ctx.fillRect(x - 6, y + 18, 4, 18);
-                ctx.fillRect(x + w + 2, y + 18, 4, 18);
-            } else if (customization.accessory === 'backpack') {
-                ctx.fillStyle = '#8B4513';
-                ctx.fillRect(x - 4, y + 16, 8, 16);
-                ctx.fillRect(x + w - 4, y + 16, 8, 16);
-                ctx.fillStyle = '#A0522D';
-                ctx.fillRect(x - 2, y + 18, 4, 4);
-                ctx.fillRect(x + w - 2, y + 18, 4, 4);
+
+                ctx.moveTo(
+                    x+i*10,
+                    hazard.y+
+                    hazard.height
+                );
+
+                ctx.lineTo(
+                    x+i*10+5,
+                    hazard.y
+                );
+
+                ctx.lineTo(
+                    x+i*10+10,
+                    hazard.y+
+                    hazard.height
+                );
+
+                ctx.fill();
+
             }
+
         }
-        
-        // Cabello
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#2d1b0e';
-        ctx.beginPath();
-        ctx.arc(x + w/2, y + 2, 15, Math.PI, 2 * Math.PI);
-        ctx.fill();
-        
-        // Brillo
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(x + 4, y + 14, 6, 8);
-        
-        ctx.shadowBlur = 0;
+
     }
-    
-    // ================================================================
-    //  FUNCIONES AUXILIARES
-    // ================================================================
-    function roundRect(ctx, x, y, w, h, r) {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-        ctx.lineTo(x + w, y + h - r);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        ctx.lineTo(x + r, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.closePath();
-    }
-    
-    function drawSpike(x, y, w, h) {
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = 'rgba(255,0,0,0.5)';
-        
-        const grad = ctx.createLinearGradient(x, y, x, y + h);
-        grad.addColorStop(0, '#ff4757');
-        grad.addColorStop(0.5, '#e94560');
-        grad.addColorStop(1, '#c23152');
-        ctx.fillStyle = grad;
-        
-        ctx.beginPath();
-        ctx.moveTo(x, y + h);
-        const points = 7;
-        for (let i = 0; i <= points; i++) {
-            const px = x + (i / points) * w;
-            const py = (i % 2 === 0) ? y : y + h;
-            ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-        ctx.fill();
-        
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = 'rgba(255,100,100,0.3)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(x, y + h);
-        for (let i = 0; i <= points; i++) {
-            const px = x + (i / points) * w;
-            const py = (i % 2 === 0) ? y : y + h;
-            ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-        ctx.stroke();
-    }
-    
-    function darkenColor(color, amount) {
-        // Para colores HSL
-        if (color.startsWith('hsl')) {
-            const match = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-            if (match) {
-                const h = parseInt(match[1]);
-                const s = parseInt(match[2]);
-                const l = Math.max(0, parseInt(match[3]) * (1 - amount));
-                return `hsl(${h}, ${s}%, ${l}%)`;
-            }
-        }
-        // Para colores HEX
-        let r = parseInt(color.slice(1,3), 16);
-        let g = parseInt(color.slice(3,5), 16);
-        let b = parseInt(color.slice(5,7), 16);
-        r = Math.floor(r * (1 - amount));
-        g = Math.floor(g * (1 - amount));
-        b = Math.floor(b * (1 - amount));
-        return `rgb(${r},${g},${b})`;
-    }
-    
-    // ================================================================
-    //  FONDOS DINÁMICOS
-    // ================================================================
-    function drawBackground(level) {
-        const theme = level.theme;
-        const bg = theme.bg || 'forest';
-        
-        // Usar skyColor dinámico
-        const skyColor = theme.skyColor || '#0d1f2d';
-        const groundColor = theme.color || '#1a3a2a';
-        
-        const grad = ctx.createLinearGradient(0, 0, 0, H);
-        grad.addColorStop(0, skyColor);
-        grad.addColorStop(0.5, darkenColor(skyColor, 0.3));
-        grad.addColorStop(1, groundColor);
-        ctx.fillStyle = grad;
-        ctx.fillRect(cameraX, 0, W, H);
-        
-        switch(bg) {
-            case 'forest': drawForest(); break;
-            case 'desert': drawDesert(); break;
-            case 'tundra': drawTundra(); break;
-            case 'volcano': drawVolcano(); break;
-            case 'space': drawSpace(); break;
-        }
-    }
-    
-    function drawForest() {
-        for (let i = 0; i < 30; i++) {
-            const x = ((i * 67 + 20 + cameraX * 0.5) % W + W) % W + cameraX;
-            const h = 40 + (i % 5) * 20;
-            ctx.fillStyle = `rgba(30,80,40,${0.05 + (i % 3) * 0.02})`;
-            ctx.fillRect(x, H - h, 8, h);
-            ctx.beginPath();
-            ctx.arc(x + 4, H - h, 15 + (i % 10), 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-    
-    function drawDesert() {
-        for (let i = 0; i < 40; i++) {
-            const x = ((i * 47 + 10 + cameraX * 0.7) % W + W) % W + cameraX;
-            const h = 10 + (i % 8) * 8;
-            ctx.fillStyle = `rgba(200,150,80,${0.03 + (i % 5) * 0.015})`;
-            ctx.beginPath();
-            ctx.moveTo(x, H - 5);
-            ctx.quadraticCurveTo(x + 15, H - 5 - h, x + 30, H - 5);
-            ctx.fill();
-        }
-    }
-    
-    function drawTundra() {
-        for (let i = 0; i < 50; i++) {
-            const x = ((i * 33 + 15 + cameraX * 0.3 + frameCount * 0.2) % W + W) % W + cameraX;
-            const y = (i * 47 + 20 + frameCount * 0.1) % H;
-            ctx.fillStyle = `rgba(255,255,255,${0.03 + (i % 5) * 0.01})`;
-            ctx.beginPath();
-            ctx.arc(x, y, 2 + (i % 3), 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-    
-    function drawVolcano() {
-        for (let i = 0; i < 20; i++) {
-            const x = ((i * 97 + cameraX * 0.4 + frameCount * 0.3) % W + W) % W + cameraX;
-            const y = H - 10 + Math.sin(frameCount * 0.02 + i) * 5;
-            ctx.fillStyle = `rgba(255,100,0,${0.05 + (i % 4) * 0.02})`;
-            ctx.fillRect(x, y, 15 + (i % 10), 3);
-        }
-    }
-    
-    function drawSpace() {
-        for (let i = 0; i < 100; i++) {
-            const x = ((i * 137 + 50 + cameraX * 0.2) % W + W) % W + cameraX;
-            const y = (i * 251 + 30) % H;
-            const s = (i % 3) + 1;
-            const a = 0.1 + (i % 5) * 0.05;
-            ctx.fillStyle = `rgba(255,255,255,${a})`;
-            ctx.fillRect(x, y, s, s);
-        }
-    }
-    
-    // ================================================================
-    //  CONTROLES (sin cambios)
-    // ================================================================
-    document.addEventListener('keydown', (e) => {
-        keys[e.code] = true;
-        if (e.code === 'KeyR') resetCurrentLevel();
-        if (e.code === 'KeyP') {
-            gameRunning = !gameRunning;
-            if (!gameRunning) showMessage('⏸️ PAUSA', 500);
-            else showMessage('▶️ CONTINUAR', 500);
-        }
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
-            e.preventDefault();
-        }
-    });
-    
-    document.addEventListener('keyup', (e) => {
-        keys[e.code] = false;
-    });
-    
-    function setupMobileControls() {
-        const btnLeft = document.getElementById('btnLeft');
-        const btnRight = document.getElementById('btnRight');
-        const btnJump = document.getElementById('btnJump');
-        
-        const addTouch = (el, key) => {
-            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
-            el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
-            el.addEventListener('touchcancel', (e) => { keys[key] = false; });
-            el.addEventListener('mousedown', () => { keys[key] = true; });
-            el.addEventListener('mouseup', () => { keys[key] = false; });
-            el.addEventListener('mouseleave', () => { keys[key] = false; });
+
+
+    /* enemigos */
+
+    for(
+        const enemy of enemies
+    ){
+
+        if(
+            !enemy.alive
+        )continue;
+
+
+        const x =
+            enemy.x-
+            cameraX;
+
+
+        const colors = {
+            walker: "#71452e",
+            flyer: "#3c8050",
+            shooter: "#67458a",
+            tank: "#8b4513"
         };
-        
-        addTouch(btnLeft, 'left');
-        addTouch(btnRight, 'right');
-        addTouch(btnJump, 'jump');
-    }
-    setupMobileControls();
-    
-    // ================================================================
-    //  MENÚ (sin cambios)
-    // ================================================================
-    document.querySelectorAll('.menu-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            const panelId = 'panel-' + tab.dataset.tab;
-            document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-        });
-    });
-    
-    document.querySelectorAll('.world-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.world-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            selectedWorld = parseInt(btn.dataset.world);
-        });
-    });
-    
-    document.querySelectorAll('.custom-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const custom = item.dataset.custom;
-            const value = item.dataset.value;
-            document.querySelectorAll(`.custom-item[data-custom="${custom}"]`).forEach(el => {
-                el.classList.remove('active');
-            });
-            item.classList.add('active');
-            customization[custom] = value;
-        });
-    });
-    
-    menuStartBtn.addEventListener('click', () => {
-        currentWorld = selectedWorld;
-        currentLevelInWorld = 0;
-        hearts = MAX_HEARTS;
-        totalDeaths = 0;
-        showMenu = false;
-        menuOverlay.classList.add('hidden');
-        levelTransitioning = false;
-        initLevel();
-    });
-    
-    menuBtn.addEventListener('click', () => {
-        showMenu = true;
-        menuOverlay.classList.remove('hidden');
-        gameRunning = false;
-    });
-    
-    // ================================================================
-    //  BOTONES (sin cambios)
-    // ================================================================
-    document.getElementById('restartBtn').addEventListener('click', resetCurrentLevel);
-    document.getElementById('resetGameBtn').addEventListener('click', resetFullGame);
-    
-    document.getElementById('prevWorldBtn').addEventListener('click', () => {
-        if (currentWorld > 0) {
-            currentWorld--;
-            currentLevelInWorld = 0;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`🌍 Mundo ${currentWorld + 1}`, 1000);
+
+
+        ctx.fillStyle =
+            enemy.color || colors[enemy.type] || "#71452e";
+
+
+        ctx.beginPath();
+
+        ctx.roundRect(
+            x,
+            enemy.y,
+            enemy.width,
+            enemy.height,
+            8
+        );
+
+        ctx.fill();
+
+
+        /* ojos */
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.fillRect(
+            x+7,
+            enemy.y+9,
+            8,
+            9
+        );
+
+        ctx.fillRect(
+            x+27,
+            enemy.y+9,
+            8,
+            9
+        );
+
+
+        ctx.fillStyle =
+            "#111";
+
+        ctx.fillRect(
+            x+10,
+            enemy.y+12,
+            3,
+            4
+        );
+
+        ctx.fillRect(
+            x+30,
+            enemy.y+12,
+            3,
+            4
+        );
+
+
+        /* detalles según tipo */
+
+        if(enemy.type === "flyer") {
+            // Alas
+            ctx.fillStyle = "#4CAF50";
+            ctx.fillRect(x-15, enemy.y+10, 15, 8);
+            ctx.fillRect(x+enemy.width, enemy.y+10, 15, 8);
+        } else if(enemy.type === "tank") {
+            // Armadura
+            ctx.strokeStyle = "#666";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x+3, enemy.y+3, enemy.width-6, enemy.height-6);
+        } else if(enemy.type === "shooter") {
+            // Cañón
+            ctx.fillStyle = "#333";
+            ctx.fillRect(x-5, enemy.y+10, 8, 8);
         }
-    });
-    
-    document.getElementById('nextWorldBtn').addEventListener('click', () => {
-        if (currentWorld < TOTAL_WORLDS - 1) {
-            currentWorld++;
-            currentLevelInWorld = 0;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`🌍 Mundo ${currentWorld + 1}`, 1000);
+
+
+        /* congelado */
+
+        if(enemy.frozen > 0) {
+            ctx.fillStyle = "rgba(0,255,255,.5)";
+            ctx.fillRect(x, enemy.y, enemy.width, enemy.height);
         }
-    });
-    
-    document.getElementById('prevLevelBtn').addEventListener('click', () => {
-        if (currentLevelInWorld > 0) {
-            currentLevelInWorld--;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`⬅️ Nivel ${currentLevelInWorld + 1}`, 1000);
-        } else if (currentWorld > 0) {
-            currentWorld--;
-            currentLevelInWorld = LEVELS_PER_WORLD - 1;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`🌍 Mundo ${currentWorld + 1} - Nivel ${LEVELS_PER_WORLD}`, 1000);
+
+    }
+
+
+    /* proyectiles */
+
+    for(
+        const shot of projectiles
+    ){
+
+        if(shot.type === "enemy") {
+            ctx.fillStyle = "#ff0000";
+        } else if(shot.type === "fireball") {
+            ctx.fillStyle = "#ff4500";
+        } else if(shot.type === "laser") {
+            ctx.fillStyle = "#00ffff";
+        } else if(shot.type === "thunder") {
+            ctx.fillStyle = "#ffff00";
+        } else if(shot.type === "sword") {
+            ctx.fillStyle = "#c0c0c0";
+        } else if(shot.type === "cannon") {
+            ctx.fillStyle = "#ff6600";
+        } else {
+            ctx.fillStyle = "#ff7135";
         }
-    });
-    
-    document.getElementById('nextLevelBtn').addEventListener('click', () => {
-        if (currentLevelInWorld < LEVELS_PER_WORLD - 1) {
-            currentLevelInWorld++;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`➡️ Nivel ${currentLevelInWorld + 1}`, 1000);
-        } else if (currentWorld < TOTAL_WORLDS - 1) {
-            currentWorld++;
-            currentLevelInWorld = 0;
-            hearts = MAX_HEARTS;
-            levelTransitioning = false;
-            initLevel();
-            showMessage(`🌍 Mundo ${currentWorld + 1} - Nivel 1`, 1000);
+
+        ctx.beginPath();
+
+        ctx.arc(
+            shot.x-cameraX,
+            shot.y,
+            shot.radius,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* meta */
+
+    const gx =
+        goal.x-
+        cameraX;
+
+
+    ctx.fillStyle =
+        "#e6e9ed";
+
+    ctx.fillRect(
+        gx,
+        goal.y,
+        7,
+        goal.height
+    );
+
+
+    ctx.fillStyle =
+        "#ffd447";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        gx+7,
+        goal.y+15
+    );
+
+    ctx.lineTo(
+        gx+65,
+        goal.y+38
+    );
+
+    ctx.lineTo(
+        gx+7,
+        goal.y+61
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   DIBUJAR JUGADOR MEJORADO
+========================================================= */
+
+function drawPlayer(){
+
+    if(
+        player.invincible>0 &&
+        Math.floor(
+            player.invincible/6
+        )%2===0
+    ){
+
+        return;
+
+    }
+
+
+    const outfit =
+        getOutfit();
+
+    const customChar = getCustomCharacter();
+
+    const charColor = customChar ? customChar.color : outfit.color;
+
+
+    const x =
+        player.x-
+        cameraX;
+
+
+    const y =
+        player.y;
+
+
+    const walking =
+        player.grounded && player.state === "running"
+        ?Math.sin(
+            player.animation
+        )*4
+        :0;
+
+    const jumpAnim = player.state === "jumping" ? -3 : 0;
+    const fallAnim = player.state === "falling" ? 3 : 0;
+    const hurtAnim = player.state === "hurt" ? 2 : 0;
+    const shootAnim = player.state === "shooting" ? 1 : 0;
+
+
+    /* sombra */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,.25)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x+19,
+        y+61,
+        22,
+        5,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x+19,
+        y+29 + jumpAnim + fallAnim + hurtAnim
+    );
+
+
+    if(player.state === "dashing") {
+        ctx.rotate(player.face * 0.3);
+    }
+
+
+    ctx.scale(
+        player.face,
+        1
+    );
+
+
+    /* capa */
+
+    if(customChar && customChar.cape > 0 || outfit.cape) {
+        const capeType = customChar ? customChar.cape : 1;
+        const capeWave = Math.sin(levelTime/5) * 3;
+
+        ctx.fillStyle = charColor;
+        ctx.globalAlpha = 0.8;
+
+        if(capeType === 2) {
+            // Capa larga
+            ctx.beginPath();
+            ctx.moveTo(-10, -8);
+            ctx.quadraticCurveTo(-20, 15 + capeWave, -15, 40 + capeWave*2);
+            ctx.lineTo(-5, 35 + capeWave);
+            ctx.lineTo(-5, -8);
+            ctx.closePath();
+            ctx.fill();
+        } else if(capeType === 3) {
+            // Alas
+            ctx.beginPath();
+            ctx.moveTo(-8, -5);
+            ctx.quadraticCurveTo(-25, -15 + capeWave, -20, 10 + capeWave);
+            ctx.quadraticCurveTo(-15, 5, -8, 5);
+            ctx.closePath();
+            ctx.fill();
+        } else {
+            // Capa corta
+            ctx.fillRect(-12, -8, 8, 25 + capeWave);
         }
-    });
-    
-    // ================================================================
-    //  REINICIOS (sin cambios)
-    // ================================================================
-    function resetCurrentLevel() {
-        hearts = MAX_HEARTS;
-        particles = [];
-        gameRunning = true;
-        deathAnimation = false;
-        levelTransitioning = false;
-        initLevel();
-        showMessage('🔄 Nivel Reiniciado', 800);
+
+        ctx.globalAlpha = 1;
     }
-    
-    function resetFullGame() {
-        currentWorld = 0;
-        currentLevelInWorld = 0;
-        hearts = MAX_HEARTS;
-        totalDeaths = 0;
-        particles = [];
-        gameRunning = true;
-        deathAnimation = false;
-        levelTransitioning = false;
-        comboCount = 0;
-        showMenu = true;
-        menuOverlay.classList.remove('hidden');
-        initLevel();
-        showMessage('✨ Nuevo Juego Iniciado ✨', 1500);
+
+
+    /* piernas */
+
+    ctx.fillStyle =
+        "#28354b";
+
+    ctx.fillRect(
+        -13,
+        8,
+        10,
+        23+walking
+    );
+
+    ctx.fillRect(
+        3,
+        8,
+        10,
+        23-walking
+    );
+
+
+    /* zapatos */
+
+    ctx.fillStyle =
+        "#15191e";
+
+    ctx.fillRect(
+        -17,
+        29 + walking,
+        18,
+        7
+    );
+
+    ctx.fillRect(
+        1,
+        29 - walking,
+        18,
+        7
+    );
+
+
+    /* brazos */
+
+    ctx.fillStyle =
+        "#d69d7a";
+
+    if(shootAnim && player.face === 1) {
+        // Brazo extendido al disparar
+        ctx.fillRect(15, -6, 20, 7);
+    } else if(shootAnim && player.face === -1) {
+        ctx.fillRect(-25, -6, 20, 7);
+    } else {
+        ctx.fillRect(-24, -6 + walking, 9, 21);
+        ctx.fillRect(15, -6 - walking, 9, 21);
     }
-    
-    // ================================================================
-    //  INICIALIZAR
-    // ================================================================
-    function init() {
-        generateAllLevels();
-        initLevel();
-        gameLoop();
-        resizeCanvas();
+
+
+    /* cuerpo */
+
+    ctx.fillStyle =
+        charColor;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        -15,
+        -12,
+        30,
+        28,
+        7
+    );
+
+    ctx.fill();
+
+
+    /* máscara */
+
+    if(customChar && customChar.mask || outfit.mask) {
+        ctx.fillStyle = "rgba(0,0,0,.8)";
+        ctx.fillRect(-14, -26, 28, 8);
     }
-    
-    function resizeCanvas() {
-        const container = document.getElementById('gameContainer');
-        const maxWidth = window.innerWidth - 20;
-        const maxHeight = window.innerHeight - 20;
-        const aspectRatio = 1200 / 550;
-        
-        let width = Math.min(1200, maxWidth);
-        let height = width / aspectRatio;
-        
-        if (height > maxHeight) {
-            height = maxHeight;
-            width = height * aspectRatio;
+
+
+    /* cabeza */
+
+    const headType = customChar ? customChar.head : 1;
+
+    if(headType === 2) {
+        // Cabeza robótica
+        ctx.fillStyle = "#808080";
+        ctx.fillRect(-15, -32, 30, 20);
+        ctx.fillStyle = "#00ffff";
+        ctx.fillRect(-5, -28, 10, 3);
+    } else if(headType === 3) {
+        // Cabeza ninja
+        ctx.fillStyle = "#333";
+        ctx.fillRect(-15, -32, 30, 18);
+        ctx.fillStyle = "#dba27f";
+        ctx.fillRect(-5, -28, 10, 6);
+    } else if(headType === 4) {
+        // Casco
+        ctx.fillStyle = "#c0c0c0";
+        ctx.beginPath();
+        ctx.arc(0, -26, 15, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "#00ff00";
+        ctx.fillRect(-5, -29, 10, 4);
+    } else {
+        // Cabeza normal
+        ctx.fillStyle = "#dba27f";
+        ctx.beginPath();
+        ctx.arc(0, -23, 15, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+
+    /* cabello */
+
+    const hairType = customChar ? customChar.hair : 1;
+
+    if(hairType === 1) {
+        ctx.fillStyle = "#30231e";
+        ctx.beginPath();
+        ctx.arc(0, -29, 15, Math.PI, Math.PI*2);
+        ctx.fill();
+    } else if(hairType === 2) {
+        ctx.fillStyle = "#30231e";
+        ctx.beginPath();
+        ctx.arc(0, -29, 15, Math.PI, Math.PI*2);
+        ctx.fill();
+        ctx.fillRect(-15, -25, 5, 20);
+        ctx.fillRect(10, -25, 5, 20);
+    } else if(hairType === 3) {
+        ctx.fillStyle = "#ff4500";
+        ctx.beginPath();
+        ctx.moveTo(-15, -20);
+        ctx.lineTo(-10, -35);
+        ctx.lineTo(-5, -25);
+        ctx.lineTo(0, -40);
+        ctx.lineTo(5, -25);
+        ctx.lineTo(10, -35);
+        ctx.lineTo(15, -20);
+        ctx.fill();
+    }
+
+
+    /* ojo */
+
+    ctx.fillStyle =
+        "#15191e";
+
+    ctx.fillRect(
+        5 + shootAnim,
+        -24,
+        3,
+        4
+    );
+
+
+    /* símbolo del traje */
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.font =
+        "bold 11px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.fillText(
+        getCharacter().name[0],
+        0,
+        6
+    );
+
+
+    /* arma */
+
+    const weaponType = customChar ? customChar.weapon : 1;
+
+    if(weaponType === 2) {
+        // Espada
+        ctx.fillStyle = "#c0c0c0";
+        ctx.fillRect(20, -2, 25, 3);
+        ctx.fillStyle = "#8b4513";
+        ctx.fillRect(18, -4, 5, 7);
+    } else if(weaponType === 3) {
+        // Bastón
+        ctx.fillStyle = "#8b4513";
+        ctx.fillRect(20, -15, 4, 25);
+        ctx.fillStyle = "#00ffff";
+        ctx.beginPath();
+        ctx.arc(22, -15, 4, 0, Math.PI*2);
+        ctx.fill();
+    } else if(weaponType === 4) {
+        // Cañón
+        ctx.fillStyle = "#666";
+        ctx.fillRect(18, -8, 15, 12);
+        ctx.fillStyle = "#ff4500";
+        ctx.beginPath();
+        ctx.arc(33, -2, 5, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+
+    /* poder */
+
+    if(
+        player.power
+    ){
+
+        ctx.strokeStyle =
+            player.power==="shield"
+            ?"rgba(255,212,71,.9)"
+            :"rgba(70,255,130,.9)";
+
+        ctx.lineWidth=2;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            31+
+            Math.sin(
+                performance.now()/100
+            )*2,
+            0,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   PARTÍCULAS MEJORADAS
+========================================================= */
+
+function drawParticles(){
+
+    for(
+        const p of ambientParticles
+    ){
+
+        ctx.globalAlpha =
+            Math.max(
+                0,
+                p.life/200
+            );
+
+        ctx.fillStyle =
+            p.color;
+
+        if(p.type === "mist") {
+            ctx.fillRect(
+                p.x-cameraX - p.size/2,
+                p.y - p.size/2,
+                p.size,
+                p.size
+            );
+        } else {
+            ctx.fillRect(
+                p.x-cameraX,
+                p.y,
+                p.size,
+                p.size
+            );
         }
-        
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        
-        const mobileControls = document.getElementById('mobileControls');
-        if (window.innerWidth < 768 || 'ontouchstart' in window) {
-            mobileControls.style.display = 'flex';
+
+    }
+
+    for(
+        const p of particles
+    ){
+
+        ctx.globalAlpha =
+            Math.max(
+                0,
+                p.life/40
+            );
+
+        ctx.fillStyle =
+            p.color;
+
+        ctx.fillRect(
+            p.x-cameraX,
+            p.y,
+            p.size || 5,
+            p.size || 5
+        );
+
+    }
+
+    ctx.globalAlpha=1;
+
+}
+
+
+/* =========================================================
+   DIBUJAR TODO
+========================================================= */
+
+function draw(){
+
+    drawBackground();
+
+    drawLevel();
+
+    drawPlayer();
+
+    drawParticles();
+
+
+    if(
+        gameState==="paused"
+    ){
+
+        ctx.fillStyle =
+            "rgba(0,0,0,.5)";
+
+        ctx.fillRect(
+            0,
+            0,
+            WIDTH,
+            HEIGHT
+        );
+
+        ctx.fillStyle =
+            "#ffffff";
+
+        ctx.font =
+            "900 55px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            "PAUSA",
+            WIDTH/2,
+            HEIGHT/2
+        );
+
+        ctx.textAlign =
+            "left";
+
+    }
+
+}
+
+
+/* =========================================================
+   HUD MEJORADO
+========================================================= */
+
+function updateHUD(){
+
+    document
+        .getElementById("hudWorld")
+        .textContent =
+            currentWorld;
+
+    document
+        .getElementById("hudLevel")
+        .textContent =
+            currentLevel;
+
+    document
+        .getElementById("hudLives")
+        .textContent =
+            lives;
+
+    document
+        .getElementById("hudCoins")
+        .textContent =
+            coins;
+
+    document
+        .getElementById("hudScore")
+        .textContent =
+            score;
+
+}
+
+
+/* =========================================================
+   MENÚS
+========================================================= */
+
+const screens = [
+
+    "mainMenu",
+
+    "levelsMenu",
+
+    "charactersMenu",
+
+    "outfitsMenu",
+
+    "editorMenu",
+
+    "pauseScreen",
+
+    "resultScreen"
+
+];
+
+
+function hideAllScreens(){
+
+    for(
+        const id of screens
+    ){
+
+        document
+            .getElementById(id)
+            .classList
+            .add("hidden");
+
+    }
+
+}
+
+
+/* =========================================================
+   MENÚ PRINCIPAL
+========================================================= */
+
+function showMainMenu(){
+
+    gameState =
+        "menu";
+
+    hideAllScreens();
+
+    document
+        .getElementById("mainMenu")
+        .classList
+        .remove("hidden");
+
+    document
+        .getElementById("hud")
+        .classList
+        .add("hidden");
+
+    document
+        .getElementById("mobileControls")
+        .classList
+        .add("hidden");
+
+}
+
+
+/* =========================================================
+   MENÚ NIVELES
+========================================================= */
+
+function showLevels(){
+
+    gameState =
+        "menu";
+
+    hideAllScreens();
+
+    const grid =
+        document
+            .getElementById(
+                "levelGrid"
+            );
+
+    grid.innerHTML="";
+
+
+    for(
+        let level=1;
+        level<=5;
+        level++
+    ){
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        const unlocked =
+            level<=
+            save.unlockedLevel;
+
+
+        const completed =
+            save.completed.includes(
+                level
+            );
+
+
+        button.className =
+            "levelButton "+
+
+            (
+                completed
+                ?"complete"
+                :unlocked
+                ?"open"
+                :"locked"
+            );
+
+
+        button.textContent =
+            completed
+            ?"✓ "+level
+            :unlocked
+            ?level
+            :"🔒";
+
+
+        if(unlocked){
+
+            button.onclick =
+                ()=>startLevel(
+                    Math.ceil(
+                        level/1
+                    ),
+                    level
+                );
+
         }
+
+
+        grid.appendChild(
+            button
+        );
+
     }
-    
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('orientationchange', () => {
-        setTimeout(resizeCanvas, 300);
+
+
+    document
+        .getElementById("levelsMenu")
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =========================================================
+   PERSONAJES
+========================================================= */
+
+function showCharacters(){
+
+    gameState =
+        "menu";
+
+    hideAllScreens();
+
+
+    const grid =
+        document
+            .getElementById(
+                "characterGrid"
+            );
+
+
+    grid.innerHTML="";
+
+
+    for(
+        const character of characters
+    ){
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "card "+
+
+            (
+                save.character===
+                character.id
+                ?"selected"
+                :""
+            );
+
+
+        card.innerHTML = `
+
+            <div class="avatar">
+                ${character.icon}
+            </div>
+
+            <h3>
+                ${character.name}
+            </h3>
+
+            <small>
+                ${character.description}
+                <br>
+                ⚡ Velocidad:
+                ${character.speed}
+                <br>
+                🦘 Salto:
+                ${character.jump}
+                <br>
+                💥 Daño:
+                ${character.damage}
+                <br>
+                ✨ Especial:
+                ${character.specialAbility !== "none" ? character.specialAbility : "Ninguno"}
+            </small>
+
+        `;
+
+
+        card.onclick =
+            ()=>{
+
+                save.character =
+                    character.id;
+
+                saveGame();
+
+                showCharacters();
+
+            };
+
+
+        grid.appendChild(
+            card
+        );
+
+    }
+
+
+    document
+        .getElementById(
+            "charactersMenu"
+        )
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =========================================================
+   TRAJES
+========================================================= */
+
+function showOutfits(){
+
+    gameState =
+        "menu";
+
+    hideAllScreens();
+
+
+    const grid =
+        document
+            .getElementById(
+                "outfitGrid"
+            );
+
+
+    grid.innerHTML="";
+
+
+    for(
+        const outfit of outfits
+    ){
+
+        const unlocked =
+            save.unlockedLevel >=
+            outfit.unlock;
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "card "+
+
+            (
+                save.outfit===
+                outfit.id
+                ?"selected"
+                :""
+            )+
+
+            (
+                !unlocked
+                ?" locked"
+                :""
+            );
+
+
+        card.innerHTML = `
+
+            <div class="avatar">
+                ${outfit.icon}
+            </div>
+
+            <h3>
+                ${outfit.name}
+            </h3>
+
+            <small>
+                ${
+                    unlocked
+                    ?"DESBLOQUEADO"
+                    :"🔒 Nivel "+
+                     outfit.unlock
+                }
+                ${outfit.cape ? "🦸 Con capa" : ""}
+                ${outfit.mask ? "🎭 Con máscara" : ""}
+            </small>
+
+        `;
+
+
+        if(unlocked){
+
+            card.onclick =
+                ()=>{
+
+                    save.outfit =
+                        outfit.id;
+
+                    saveGame();
+
+                    showOutfits();
+
+                };
+
+        }
+
+
+        grid.appendChild(
+            card
+        );
+
+    }
+
+
+    document
+        .getElementById(
+            "outfitsMenu"
+        )
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =========================================================
+   EDITOR DE PERSONAJE
+========================================================= */
+
+function showEditor(){
+
+    gameState =
+        "menu";
+
+    hideAllScreens();
+
+    document
+        .getElementById("editorMenu")
+        .classList
+        .remove("hidden");
+
+    updateEditorUI();
+
+}
+
+
+function updateEditorUI(){
+
+    // Actualizar opciones de color
+    const colorContainer = document.getElementById("colorOptions");
+    colorContainer.innerHTML = "";
+    editorOptions.colors.forEach(color => {
+        const div = document.createElement("div");
+        div.className = "colorOption" + (editorData.color === color ? " selected" : "");
+        div.style.backgroundColor = color;
+        div.onclick = () => {
+            editorData.color = color;
+            updateEditorUI();
+            saveCustomCharacter();
+        };
+        colorContainer.appendChild(div);
     });
-    
-    // ================================================================
-    //  BUCLE PRINCIPAL
-    // ================================================================
-    function gameLoop() {
-        update();
-        draw();
-        requestAnimationFrame(gameLoop);
+
+    // Actualizar opciones de cabeza
+    const headContainer = document.getElementById("headOptions");
+    headContainer.innerHTML = "";
+    editorOptions.heads.forEach(head => {
+        const div = document.createElement("div");
+        div.className = "editorOption" + (editorData.head === head.id ? " selected" : "");
+        div.innerHTML = `${head.icon} ${head.name}`;
+        div.onclick = () => {
+            editorData.head = head.id;
+            updateEditorUI();
+            saveCustomCharacter();
+        };
+        headContainer.appendChild(div);
+    });
+
+    // Actualizar opciones de cabello
+    const hairContainer = document.getElementById("hairOptions");
+    hairContainer.innerHTML = "";
+    editorOptions.hairs.forEach(hair => {
+        const div = document.createElement("div");
+        div.className = "editorOption" + (editorData.hair === hair.id ? " selected" : "");
+        div.innerHTML = `${hair.icon} ${hair.name}`;
+        div.onclick = () => {
+            editorData.hair = hair.id;
+            updateEditorUI();
+            saveCustomCharacter();
+        };
+        hairContainer.appendChild(div);
+    });
+
+    // Actualizar opciones de capa
+    const capeContainer = document.getElementById("capeOptions");
+    capeContainer.innerHTML = "";
+    editorOptions.capes.forEach(cape => {
+        const div = document.createElement("div");
+        div.className = "editorOption" + (editorData.cape === cape.id ? " selected" : "");
+        div.innerHTML = `${cape.icon} ${cape.name}`;
+        div.onclick = () => {
+            editorData.cape = cape.id;
+            updateEditorUI();
+            saveCustomCharacter();
+        };
+        capeContainer.appendChild(div);
+    });
+
+    // Actualizar opciones de arma
+    const weaponContainer = document.getElementById("weaponOptions");
+    weaponContainer.innerHTML = "";
+    editorOptions.weapons.forEach(weapon => {
+        const div = document.createElement("div");
+        div.className = "editorOption" + (editorData.weapon === weapon.id ? " selected" : "");
+        div.innerHTML = `${weapon.icon} ${weapon.name}`;
+        div.onclick = () => {
+            editorData.weapon = weapon.id;
+            updateEditorUI();
+            saveCustomCharacter();
+        };
+        weaponContainer.appendChild(div);
+    });
+
+    // Draw preview
+    drawEditorPreview();
+}
+
+
+function saveCustomCharacter(){
+
+    save.customCharacter = {
+        ...editorData
+    };
+
+    saveGame();
+
+}
+
+
+function drawEditorPreview(){
+
+    const previewBox = document.getElementById("editorPreview");
+
+    if(!previewBox) return;
+
+    // Crear canvas de preview si no existe
+    let previewCanvas = previewBox.querySelector("canvas");
+
+    if(!previewCanvas) {
+        previewCanvas = document.createElement("canvas");
+        previewCanvas.width = 120;
+        previewCanvas.height = 150;
+        previewBox.appendChild(previewCanvas);
     }
-    
-    init();
-    
-    console.log('⚡ DEVIL\'S ASCENT - EDICIÓN DEFINITIVA');
-    console.log(`📊 ${TOTAL_WORLDS} Mundos × ${LEVELS_PER_WORLD} Niveles = ${TOTAL_WORLDS * LEVELS_PER_WORLD} Niveles`);
-    console.log('🎨 Paisajes dinámicos que cambian cada nivel');
-    console.log('📏 Niveles más largos con scroll horizontal');
-    console.log('🆕 Nuevos obstáculos: rotatorios, enemigos, coleccionables');
-    console.log('💾 Sistema de checkpoints');
-    console.log('📱 Compatible PC y Móvil');
+
+    const pctx = previewCanvas.getContext("2d");
+
+    // Limpiar
+    pctx.clearRect(0, 0, 120, 150);
+
+    // Dibujar personaje simple
+    pctx.fillStyle = editorData.color;
+    pctx.fillRect(45, 60, 30, 30); // cuerpo
+
+    pctx.fillStyle = "#dba27f";
+    pctx.beginPath();
+    pctx.arc(60, 50, 15, 0, Math.PI*2); // cabeza
+    pctx.fill();
+
+    // Capa
+    if(editorData.cape > 0) {
+        pctx.fillStyle = editorData.color;
+        pctx.fillRect(35, 60, 10, 25);
+    }
+
+    // Arma
+    if(editorData.weapon === 2) {
+        pctx.fillStyle = "#c0c0c0";
+        pctx.fillRect(75, 70, 25, 3);
+    } else if(editorData.weapon === 3) {
+        pctx.fillStyle = "#8b4513";
+        pctx.fillRect(75, 55, 4, 25);
+    } else if(editorData.weapon === 4) {
+        pctx.fillStyle = "#666";
+        pctx.fillRect(73, 65, 15, 12);
+    }
+
+}
+
+
+/* =========================================================
+   PAUSA
+========================================================= */
+
+function togglePause(){
+
+    if(
+        gameState==="playing"
+    ){
+
+        gameState =
+            "paused";
+
+        document
+            .getElementById(
+                "pauseScreen"
+            )
+            .classList
+            .remove("hidden");
+
+    }
+
+    else if(
+        gameState==="paused"
+    ){
+
+        gameState =
+            "playing";
+
+        document
+            .getElementById(
+                "pauseScreen"
+            )
+            .classList
+            .add("hidden");
+
+    }
+
+}
+
+
+/* =========================================================
+   RESULTADO
+========================================================= */
+
+function showResult(
+    title,
+    text,
+    next
+){
+
+    document
+        .getElementById(
+            "hud"
+        )
+        .classList
+        .add("hidden");
+
+
+    document
+        .getElementById(
+            "mobileControls"
+        )
+        .classList
+        .add("hidden");
+
+
+    document
+        .getElementById(
+            "resultTitle"
+        )
+        .textContent =
+            title;
+
+
+    document
+        .getElementById(
+            "resultText"
+        )
+        .textContent =
+            text;
+
+
+    document
+        .getElementById(
+            "resultStats"
+        )
+        .innerHTML = `
+
+            ⭐ Puntuación:
+            <b>${score}</b>
+
+            <br>
+
+            🪙 Monedas:
+            <b>${coins}</b>
+
+            <br>
+
+            ⏱️ Tiempo:
+            <b>${Math.floor(levelTime/60)}s</b>
+
+            <br>
+
+            🌎 Mundo:
+            <b>${currentWorld}</b>
+
+            ·
+
+            Nivel:
+            <b>${currentLevel}</b>
+
+        `;
+
+
+    const nextButton =
+        document
+            .getElementById(
+                "nextLevelButton"
+            );
+
+
+    nextButton.style.display =
+        next
+        ?"block"
+        :"none";
+
+
+    gameState =
+        "result";
+
+
+    hideAllScreens();
+
+    document
+        .getElementById(
+            "resultScreen"
+        )
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =========================================================
+   BOTONES MENÚ
+========================================================= */
+
+document
+    .getElementById("playButton")
+    .onclick =
+        ()=>startLevel(
+            1,
+            Math.min(
+                save.unlockedLevel,
+                5
+            )
+        );
+
+
+document
+    .getElementById("levelsButton")
+    .onclick =
+        showLevels;
+
+
+document
+    .getElementById("charactersButton")
+    .onclick =
+        showCharacters;
+
+
+document
+    .getElementById("outfitsButton")
+    .onclick =
+        showOutfits;
+
+
+document
+    .getElementById("editorButton")
+    .onclick =
+        showEditor;
+
+
+document
+    .getElementById("levelsBack")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("charactersBack")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("outfitsBack")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("editorBack")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("pauseButton")
+    .onclick =
+        togglePause;
+
+
+document
+    .getElementById("resumeButton")
+    .onclick =
+        togglePause;
+
+
+document
+    .getElementById("pauseMenuButton")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("retryButton")
+    .onclick =
+        ()=>startLevel(
+            currentWorld,
+            currentLevel
+        );
+
+
+document
+    .getElementById("resultMenuButton")
+    .onclick =
+        showMainMenu;
+
+
+document
+    .getElementById("nextLevelButton")
+    .onclick =
+        ()=>{
+
+            if(
+                currentLevel<5
+            ){
+
+                startLevel(
+                    currentWorld,
+                    currentLevel+1
+                );
+
+            }else{
+
+                showMainMenu();
+
+            }
+
+        };
+
+
+/* =========================================================
+   BUCLE PRINCIPAL
+========================================================= */
+
+function gameLoop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+gameLoop();
+
+
+/* =========================================================
+   MENÚ INICIAL
+========================================================= */
+
+showMainMenu();
+
 </script>
+
 </body>
 </html>
